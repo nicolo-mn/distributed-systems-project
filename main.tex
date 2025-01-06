@@ -1,0 +1,329 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Journal Article
+% LaTeX Template
+% Version 2.0 (February 7, 2023)
+%
+% This template originates from:
+% https://www.LaTeXTemplates.com
+%
+% Author:
+% Vel (vel@latextemplates.com)
+%
+% License:
+% CC BY-NC-SA 4.0 (https://creativecommons.org/licenses/by-nc-sa/4.0/)
+%
+% NOTE: The bibliography needs to be compiled using the biber engine.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[
+	a4paper, % Paper size, use either a4paper or letterpaper
+	12pt,
+	unnumberedsections, % Comment to enable section numbering
+	twoside, % Two side traditional mode where headers and footers change between odd and even pages, comment this option to make them fixed
+]{LTJournalArticle}
+
+\addbibresource{DSBib.bib} % BibLaTeX bibliography file
+
+\runninghead{An Overview on Serverless Computing, its Opportunities and its Challenges} % A shortened article title to appear in the running head, leave this command empty for no running head
+
+\footertext{\textit{Distributed Systems Course}} % Text to appear in the footer, leave this command empty for no footer text
+
+\setcounter{page}{1} % The page number of the first page, set this to a higher number if the article is to be part of an issue or larger work
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\title{An Overview on Serverless Computing, its Opportunities and its Challenges} % Article title, use manual lines breaks (\\) to beautify the layout
+
+% Authors are listed in a comma-separated list with superscript numbers indicating affiliations
+% \thanks{} is used for any text that should be placed in a footnote on the first page, such as the corresponding author's email, journal acceptance dates, a copyright/license notice, keywords, etc
+% \author{
+	% John Smith\textsuperscript{1,2}, Robert Smith\textsuperscript{3} and Jane Smith\textsuperscript{1}\thanks{Corresponding author: \href{mailto:jane@smith.com}{jane@smith.com}\\ \textbf{Received:} October 20, 2023, \textbf{Published:} December 14, 2023}
+% }
+\author{%
+	Nicolò Monaldini
+}
+
+% Affiliations are output in the \date{} command
+% \date{\footnotesize\textsuperscript{\textbf{1}}School of Chemistry, The University of Michigan\\ \textsuperscript{\textbf{2}}Physics Department, The University of Wisconsin\\ \textsuperscript{\textbf{3}}Biological Sciences Department, The University of Minnesota}
+
+% Full-width abstract
+\renewcommand{\maketitlehookd}{%
+	\begin{abstract}
+		\noindent Serverless computing has gained importance in both academia and industry due to its cost-efficiency, automated scalability, and virtually unlimited resource availability, offering a novel pay-as-you-go model compared to traditional cloud computing solutions. The serverless paradigm not only eases end-users of the burden of infrastructure management, but its cost model enables users to pay only for resources consumed, while the provider bears the cost of idle resources. However, the stateless nature of the services offered and communication needs of related executions are problems that need to be addressed, as they could pose performance issues and limit the applications of the paradigm. This survey provides an overview of the current advancements in serverless computing, examining its opportunities, challenges, and potential solutions. 
+	\end{abstract}
+}
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle % Output the title section
+
+%----------------------------------------------------------------------------------------
+%	ARTICLE CONTENTS
+%----------------------------------------------------------------------------------------
+
+\section{Introduction}
+
+Traditional cloud computing paradigms such as \textit{Infrastructure-as-a-service (IaaS)} offer on-demand access to computing resources. However, the end-users need to reserve resources based on the peak usage of their applications, and this exclusive allocation results in a strong under utilization of data centers by only about 10\% on average \cite{li_serverless_2022}. Therefore, serverless computing has gained traction as a way to address this criticality, and most large technology companies offer serverless platforms. While there are slight differences among the services offered on the market, the underlying idea is similar: a pay-as-you-model that enables end-users to run their services transparently from the underlying infrastructure. The serverless platforms take care of all the system administration tasks, including configuration, deployment, and scaling management, while the users focus on the functionalities they intend to provide. Serverless makes use of the \textit{Function-as-a-service (FaaS)} paradigm, by which end-users can enable the services' deployment to the platforms. In this paradigm, an application is sliced into functions that are then sent to the platform, which takes care of its scheduling; the functions are not hidden from the provider, it knows information such as the external dependencies and the runtime environment. Specifically, the following data are necessary to define a function, as explained in the implementation provided by McGrath et al. \cite{mcgrath_serverless_2017}:
+
+\begin{itemize}
+	\item \textbf{Function identifier}: a randomly generated Global Unique Identifier to identify and locate function's resources.
+	\item \textbf{Language Runtime}: it specifies the language of the function's code.
+	\item \textbf{Memory size}: the maximum memory a function's container can consume.
+	\item \textbf{Code Blob URI}: an URI identifying an archive containing the function's code that will be executed.
+\end{itemize}
+
+While serverless and FaaS are often used interchangeably, it is not the case: FaaS is a paradigm used in serverless computing to enable function isolation and invocation, delegating their execution to an external provider, but Backend-as-a-Service (BaaS) is a fundamental component of serverless as well. BaaS is a cloud service model originally used for mobile and web development, that is used to outsource backend aspects of these services, such as hosting and database management. It has been grown beyond just mobile-centric services to encompass serverless as well, since it provides overall backend support for this type of service. As stated in Berkley View \cite{jonas_cloud_2019}, serverless is defined as \textit{FaaS + BaaS}. A serverless system is made of various parts:
+
+\begin{itemize}
+	\item A \textbf{controller} manages the execution of functions; it is event-driven and triggered by events created consequently to users' actions, such as REST-ful HTTP queries or new data added to a storage driver \cite{li_serverless_2022}.
+	\item A \textbf{database} contains the users' functions and the output of completed functions.
+	\item Functions are executed in \textbf{sandboxed containers} after their scheduling. After the execution, the output is saved to the storage. Logfiles are produced and sent to the provider, to then be used to optimize further executions of the function \cite{shafiei_serverless_2022}.
+\end{itemize}
+
+\begin{figure*}[!htb]
+	\includegraphics[width=\linewidth]{serverlessexecution.png}
+	\caption{Example of an asynchronous invocation. Source: \cite{li_serverless_2022}}
+	\label{fig:serverlessexecution}
+\end{figure*}
+
+An example of an asynchronous invocation in serverless computing is depicted in Figure \ref{fig:serverlessexecution}. 
+
+\subsection{Methodology}
+Serverless computing is a broad and complex topic that covers many subtopics, such as performance, security or caching. While some publications focus on a specific subtopic, reviewing the latest academic literature in that area, this work takes a broader approach by analyzing surveys and articles to offer a comprehensive overview of the topic from multiple perspectives, before exploring innovative and notable studies addressing individual challenges, ultimately providing a holistic perspective on serverless computing.
+
+\section{Security and Privacy}
+Since the services provided are executed on the cloud and serverless computing is inherently event-drive, authentication becomes a critical challenge: only authorized applications should be able to trigger events that start functions execution on the cloud, otherwise a freeloader could take advantage of the available resources of the victims, as \cite{shafiei_serverless_2022} points out. Specific tokens could be used, as Amazon Lambda implements\footnote{\url{https://docs.aws.amazon.com/apigateway/}}, but the token could be extracted and reused if the message is sent through an unsecured network. An effective solution would be to use SSL/TLS protocols \cite{freier_secure_2011, rescorla_transport_2018}, but it may be beyond the capabilities of low-energy IoT devices. Using IoT devices in serverless environments is not uncommon: given the auto-scalability property of serverless, it can easily handle large bursts of requests. IoT applications might also be very private sensitive: an example that Shafiei et al. \cite{shafiei_serverless_2022} point out is the use case in healthcare, where IoT devices transfer patient data, only by having access to the function called and their parameters, sensitive information can be extracted. Authorization is another central aspect: certain functions might be restricted to be called only by certain users or functions. To tackle this issue, AWS Lambda uses a role-based approach, where every function is assigned to roles that are associated with a particular set of permission, users have a role that define the functions they are allowed to execute, as depicted in Figure \ref{fig:authorization}. 
+
+\begin{figure*}[!htb]
+	\includegraphics[width=\linewidth]{authorization.png}
+	\caption{Authorization mechanism in serverless paradigm. Source: \cite{castro_rise_2019}}
+	\label{fig:authorization}
+\end{figure*}
+
+Replay attacks are a particularly critical point of serverless \cite{shafiei_serverless_2022}: in this type of attacks, the attacker does not know the content of a message, but are interested in the effects of its transmission; in the context of serverless, this could lead to resource exhaustion attacks in the case of multiple malicious function calls that result in a usage beyond the service-level agreement with the provider. However, as Marin et al. highlight \cite{marin_serverless_2022}, serverless is resistant to (Distributed) Denial-of-Service attacks, as it enjoys elasticity provided by its auto-scaling feature. A more common consequence of attacks usually is a heavy financial load on the application owner, rather than the disruption of the service. On the bright side, serverless can act as a security enabler \cite{marin_serverless_2022}:
+
+\begin{itemize}
+	\item It increases difficulty in performing attacks: serverless functions are short-lived, and this imposes time limits on the adversaries to retrieve data or to reach high privileged accounts to perform further damage.
+	\item It relieves developers of some security concerns: in serverless, security is a shared concern between the developers and the providers. While the providers take care of many security tasks, especially related to the infrastructure, developers need to the heavily involved in security matters as well, securing their workflows by preventing functions' vulnerabilities, limiting execution privileges and securing the data on the cloud. 
+\end{itemize}
+
+\section{Cost-effectiveness}
+Serverless computing appears more expensive than traditional cloud computing at a first analysis: the cost of per-minute execution of an AWS Lambda function compared to an AWS t3.nano VM is 7.5 times as expensive. Serverless providers, however, include in the price the cost of redundancy for ensuring availability, auto-scaling, monitoring and logging \cite{schleier-smith_what_2021}, which are functionalities that are under the responsibility of developers in serverful cloud computing, or have to be purchased as separate services. Another advantage of serverless computing included in the bill is its cost model, a pay-as-you-go pricing where the end-users pay only based on the actual resources used, and while the expense of idle resources is covered by the cloud provider, as depicted in Figure \ref{fig:serverlesscost}.
+
+\begin{figure*}
+	\includegraphics[width=\linewidth]{serverlesscost.png}
+	\caption{Advantages of serverless computing's cost model. Source: \cite{schleier-smith_what_2021}}
+	\label{fig:serverlesscost}
+\end{figure*}
+
+Even with dynamic resource allocation, serverful computing operates on a reservation model, requiring computing resources to be allocated based on the application's peak usage. As Castro et al. point out \cite{schleier-smith_what_2021}, in practice, customer realize saving when moving their applications to serverless, but the price reductions and the increased functionalities offered by the cloud providers and could threaten their revenues. However, based on the Jevons Paradox \cite{alcott_jevons_2005} the lower prices and relieved responsibilities for the customers can increase the demand, counterbalancing the price decrease and ultimately leading to higher revenues for the providers as well. 
+
+\section{Data Caching}
+Querying cloud databases may result in bottlenecks due to the latencies of persistent storage. Serverful systems use multiple level of caches, but this approach can be challenging to implement in serverless environments, given the stateless nature of the functions. Since the lack of caching makes the serverless services infeasible in real-world scenarios, there were various attempts to implement caching, mainly in-memory and distributed on multiple nodes. Amazon developed ElastiCache\footnote{\url{https://aws.amazon.com/elasticache/}}, an in-memory cache and data store, which is at least 700x more expensive compared to the Amazon S3\cite{shafiei_serverless_2022} (Amazon's cloud storage service\footnote{\url{https://aws.amazon.com/s3/}}), open source alternatives such as InfiniCache\cite{wang_infinicache_nodate} were also implemented. The implementation of a distributed cache is not straightforward\footnote{An in-depth explanation of the problem can be found at \url{https://mikhail.io/2020/03/infinicache-distributed-cache-on-aws-lambda/}}: a first idea that might be to cache data between requests in an in-memory hashmap; however, the size of functions is limited to some gigabytes by serverless providers, and every instance of the same function would need to keep in the memory potentially the same data (for example, in the case of parallel requests).
+
+Another option would be to implement a simple distributed caching system by moving the cache in multiple functions that contains a portion of the data, a big upside would be the caching pay model: cost is charged only when data is requested (i.e. new function instances need to be created), while cluster-based services charge for memory capacity whether cached objects are accessed or not.
+
+However, serverless functions are not designed for stateful use cases: they have limited resources (both CPU and memory-wise) and can run for some minutes at most. Moreover, providers such as AWS Lambda reserve the right to terminate idle functions at any time.
+
+\begin{figure*}
+	\includegraphics[width=\linewidth]{infinicache.png}
+	\caption{InfiniCache workflow. Source: \href{https://mikhail.io/2020/03/infinicache-distributed-cache-on-aws-lambda/}{www.mikhail.io}}
+	\label{fig:infinicache}
+\end{figure*}
+
+InfiniCache tackles these problems with a component (in the paper referred as ``Proxy'') that manages multiple functions that hold slices of data. The client communicates with the proxy, which orchestrates the caching transparently from the client, as depicted in Figure \ref{fig:infinicache}. Since the providers can claim idle instances at any time, the proxy implements a backup mechanism for functions as well. InfiniCache is implemented on AWS Lambda, where the functions (called ``Lambdas'') cannot receive TCP or UDP connections; therefore, to allow communication with the proxy, the proxy's IP and port are passed as parameters during the function invocation and the Lambda itself initializes a TCP connection towards the Proxy during initialization, as shown in Figure \ref{fig:lambdainvocation}. 
+
+\begin{figure}
+	\includegraphics[width=\linewidth]{lambdainvocation.png}
+	\caption{Invocation of a lambda function and connection to the proxy. Source: \href{https://mikhail.io/2020/03/infinicache-distributed-cache-on-aws-lambda/}{www.mikhail.io}}
+	\label{fig:lambdainvocation}
+\end{figure}
+
+\section{Performance}
+The execution of functions is performed in isolate sandboxes. Based on the status of the containers, two types of startups are defined:
+
+\begin{itemize}
+	\item \textbf{Warm start}: it is a case where a sandbox from a previous execution is reused
+	\item \textbf{Cold start}: it is the case where a new sandbox is started upon the function's execution, or it was precedently hibertaned by the provider to decrease its energy consumption 
+\end{itemize}
+
+A cold start incurs in higher delays, and the startup delay is dominated by the setup of the software environment (e.g. load libraries) that can take up to tens of seconds \cite{jonas_cloud_2019}. Copik et al. \cite{copik_rfaas_2023} measured the execution of an empty C++ function with various providers, resulting in startup delays in the order of tens and hundreds of milliseconds. Moreover, the provider takes cares of the scheduling, allocating computer resources to various customers; therefore, there is always a risk of queuing delays in case of high demand for the service.
+
+These delays are particularly critical for High-Perfomance Computing (HPC) applications. \textit{rFaaS} \cite{jonas_cloud_2019} aims to make serverless usable for tasks that need low-latency invocations. It employs RDMA to reduce the number of parties involved in a function call and avoiding the use of protocols such as HTTP and RPC to transfer data. It introduces the topic of leasing in a way that allow clients to reserve computational units on the server. In particular, a resource manager handles the idle resources on the server, and when a client wishes to connect to the service, it is connected to a \textit{spot executor} that handles invocation and execution of functions. The client then acquires a lease on the resources managed by the spot executor to achieve the desired number of parallel workers. Function are invoked directly by the client efficiently, by writing directly to the executor's memory the function header and the payload using RDMA. The output is returned in a similar fashion and the billing data is finally handled by the resource manager that the client firstly connected to. To reduce the startup delays, alongside warm and cold executions, it introduces the concept of hot invocations, where after a request is completed the threads continue to active poll for invocation requests. Busy polling decreases the invocation latency since threads do not enter blocked states waiting for RDMA events. This operation come at the cost of occupying the CPU, and so it should be considered as active computation time, but the executors can switch back to normal warm mode after a configurable amount of time to free the CPU. The use of hot containers decreases the overall overhead to about 350 nanoseconds on top of the fastest available network transmission. While this implementation of a RMDA-accelerated serverless platform requires specific hardware and lacks some features offered by cloud providers, such as shared storage or affordable costs, it is a great attempt to adapt serverless computing to scenarios with strict constraints in terms of latency.
+
+\section{Scheduling}
+In serverless computing, the scheduling of functions is transparent from the users, and the providers need to optimize it based on many parameters. Shafiei et al. \cite{shafiei_serverless_2022} provide an in-depth analysis of the various scheduling policies available. There is various information that is useful to know for the provider to ensure proper scheduling: for example, the data consumption patterns of tasks that are executed. If the functions running on a same physical machine are all CPU-intensive that might incur into resource contention, the same applies to tasks that transfer large quantities of data over the network. As there are various reasons that might cause delays in serverless applications, such as startup on cold containers, remote database querying, a proper scheduling could also limit these issues. While functions are stateless, it is not uncommon to depend on external data sources to perform the computations; therefore, data locality could be prioritized. Serverless applications are mostly made by chain of invocations, and by knowing them in advance deterministically or via speculative techniques, the providers could prepare warm containers to avoid startup overheads. Functions can often install dependencies as well, and batching together executions that require to download the same dependencies can further reduce overheads. 
+
+\section{Statistics on serverless usage}
+Despite AWS Lambda, the leading serverless platform, was launched in 2015, serverless is still trending and growing. Datadog in its last report\footnote{\href{https://www.datadoghq.com/state-of-serverless/}{https://www.datadoghq.com/state-of-serverless/}} stated that AWS Lambda grew by 3\% from 2022 to 2023, while Azure and Google Cloud grew by 6\% and 7\% respectively. Python and Node.js are the leading languages used in serverless environments, and for good reasons: the average startup time of functions written in Java (which is the third leading language) is two times longer compared to Python or Node.js. This is because startup time is influenced by the memory allocated to a function, and more than 25\% of Java functions allocate more than 1024 MB per function, compared to only about 10\% of functions written in Python and Node.js.
+
+\subsection{Functions Marketplaces}
+Functions marketplaces offer pre-built serverless function to be easily deployed, the most notable example is the AWS Serverless Application Repository \footnote{https://serverlessrepo.aws.amazon.com/applications}, that counts more than 1100 functions. As Shafiei et al. \cite{shafiei_serverless_2022} point out, the competition on these platforms could create a competitive environment that would lead to the increase in functions' quality, ultimately in favor of the customers. Spillner \cite{spillner_quantitative_2019} provides a quantitative analysis of the functions in the AWS Serverless Application Repository, and although the report dates back to 2019, when the repository had roughly half of the functions it has today, the conclusion are partially analogous to the ones in the Datadog report cited above, for example about the dominance of Python and Node.js as programming languages.
+
+
+\section{Conclusion}
+Serverless computing represents a transformative shift in the cloud computing paradigm, and porting applications would offer benefits such as cost-efficiency, automated scalability, and simplified infrastructure management. Its pay-as-you-go model has unlocked new possibilities for businesses and developers, allowing them to focus on innovation rather than operational complexities. However, this is not without challenges, since the stateless nature of the paradigm and its latencies compared to typical serverful implementations can limit its expansion, and need to be addressed. 
+
+Through this work, an overview on the topic under many points of view was provided, highlighting not only the potentialities but also the challenges it faces. Previous innovative efforts that aim to limit or solve some of the limitations were analyzed; addressing these limitations is crucial for serverless computing to mature into a more robust, adaptable, and widely applicable technology for the future of cloud services.
+
+% \begin{equation}
+% 	\cos^3 \theta =\frac{1}{4}\cos\theta+\frac{3}{4}\cos 3\theta
+% 	\label{eq:example}
+% \end{equation}
+
+% Automatically referencing an equation number using its label: Equation \ref{eq:example}.
+
+% In hac habitasse platea dictumst. Curabitur mattis elit sit amet justo luctus vestibulum. In hac habitasse platea dictumst. Pellentesque lobortis justo enim, a condimentum massa tempor eu. Ut quis nulla a quam pretium eleifend nec eu nisl. Nam cursus porttitor eros, sed luctus ligula convallis quis. Nam convallis, ligula in auctor euismod, ligula mauris fringilla tellus, et egestas mauris odio eget diam. Praesent sodales in ipsum eu dictum. Aenean vel enim ipsum. Fusce ut felis at eros sagittis bibendum mollis lobortis libero.
+
+% Maecenas consectetur metus at tellus finibus condimentum. Proin arcu lectus, ultrices non tincidunt et, tincidunt ut quam. Integer luctus posuere est, non maximus ante dignissim quis. Nunc a cursus erat. Curabitur suscipit nibh in tincidunt sagittis. Nam malesuada vestibulum quam id gravida. Proin ut dapibus velit. Vestibulum eget quam quis ipsum semper convallis. Duis consectetur nibh ac diam dignissim, id condimentum enim dictum. Nam aliquet ligula eu magna pellentesque, nec sagittis leo lobortis. Aenean tincidunt dignissim egestas.
+
+% %------------------------------------------------
+
+% \section{Methodologies}
+
+% \subsection{Sample Sites \& Processing}
+
+% This line shows how to use a footnote to further explain or cite text\footnote{Example footnote text.}.
+
+% This is a bullet point list:
+
+% \begin{itemize}
+% 	\item Arcu eros accumsan lorem, at posuere mi diam sit amet tortor
+% 	\item Fusce fermentum, mi sit amet euismod rutrum
+% 	\item Sem lorem molestie diam, iaculis aliquet sapien tortor non nisi
+% 	\item Pellentesque bibendum pretium aliquet
+% \end{itemize}
+
+% Mauris interdum porttitor fringilla. Proin tincidunt sodales leo at ornare. Donec tempus magna non mauris gravida luctus. Cras vitae arcu vitae mauris eleifend scelerisque. Nam sem sapien, vulputate nec felis eu, blandit convallis risus. Pellentesque sollicitudin venenatis tincidunt. In et ipsum libero. Nullam tempor ligula a massa convallis pellentesque.
+
+% This is a numbered list:
+
+% \begin{enumerate}
+% 	\item Donec dolor arcu, rutrum id molestie in, viverra sed diam
+% 	\item Curabitur feugiat
+% 	\item Turpis sed auctor facilisis
+% \end{enumerate}
+
+% \subsection{Species Identification}
+
+% Proin lobortis efficitur dictum. Pellentesque vitae pharetra eros, quis dignissim magna. Sed tellus leo, semper non vestibulum vel, tincidunt eu mi. Aenean pretium ut velit sed facilisis. Ut placerat urna facilisis dolor suscipit vehicula. Ut ut auctor nunc. Nulla non massa eros. Proin rhoncus arcu odio, eu lobortis metus sollicitudin eu. Duis maximus ex dui, id bibendum diam dignissim id. Aliquam quis lorem lorem. Phasellus sagittis aliquet dolor, vulputate cursus dolor convallis vel. Suspendisse eu tellus feugiat, bibendum lectus quis, fermentum nunc. Nunc euismod condimentum magna nec bibendum. Curabitur elementum nibh eu sem cursus, eu aliquam leo rutrum. Sed bibendum augue sit amet pharetra ullamcorper. Aenean congue sit amet tortor vitae feugiat.
+
+% Mauris interdum porttitor fringilla. Proin tincidunt sodales leo at ornare. Donec tempus magna non mauris gravida luctus. Cras vitae arcu vitae mauris eleifend scelerisque. Nam sem sapien, vulputate nec felis eu, blandit convallis risus. Pellentesque sollicitudin venenatis tincidunt. In et ipsum libero. Nullam tempor ligula a massa convallis pellentesque.
+
+% \subsection{Data Analysis}
+
+% Vestibulum sodales orci a nisi interdum tristique. In dictum vehicula dui, eget bibendum purus elementum eu. Pellentesque lobortis mattis mauris, non feugiat dolor vulputate a. Cras porttitor dapibus lacus at pulvinar. Praesent eu nunc et libero porttitor malesuada tempus quis massa. Aenean cursus ipsum a velit ultricies sagittis. Sed non leo ullamcorper, suscipit massa ut, pulvinar erat. Aliquam erat volutpat. Nulla non lacus vitae mi placerat tincidunt et ac diam. Aliquam tincidunt augue sem, ut vestibulum est volutpat eget. Suspendisse potenti. Integer condimentum, risus nec maximus elementum, lacus purus porta arcu, at ultrices diam nisl eget urna. Curabitur sollicitudin diam quis sollicitudin varius. Ut porta erat ornare laoreet euismod. In tincidunt purus dui, nec egestas dui convallis non. In vestibulum ipsum in dictum scelerisque.
+
+% Mauris interdum porttitor fringilla. Proin tincidunt sodales leo at ornare. Donec tempus magna non mauris gravida luctus. Cras vitae arcu vitae mauris eleifend scelerisque. Nam sem sapien, vulputate nec felis eu, blandit convallis risus. Pellentesque sollicitudin venenatis tincidunt. In et ipsum libero. Nullam tempor ligula a massa convallis pellentesque. Mauris interdum porttitor fringilla. Proin tincidunt sodales leo at ornare. Donec tempus magna non mauris gravida luctus. Cras vitae arcu vitae mauris eleifend scelerisque. Nam sem sapien, vulputate nec felis eu, blandit convallis risus. Pellentesque sollicitudin venenatis tincidunt. In et ipsum libero. Nullam tempor ligula a massa convallis pellentesque.
+
+% %------------------------------------------------
+
+% \section{Results}
+
+% \begin{table} % Single column table
+% 	\caption{Example single column table.}
+% 	\centering
+% 	\begin{tabular}{l l r}
+% 		\toprule
+% 		\multicolumn{2}{c}{Location} \\
+% 		\cmidrule(r){1-2}
+% 		East Distance & West Distance & Count \\
+% 		\midrule
+% 		100km & 200km & 422 \\
+% 		350km & 1000km & 1833 \\
+% 		600km & 1200km & 890 \\
+% 		\bottomrule
+% 	\end{tabular}
+% 	\label{tab:distcounts}
+% \end{table}
+
+% Referencing a table using its label: Table \ref{tab:distcounts}.
+
+% \begin{table*} % Full width table (notice the starred environment)
+% 	\caption{Example two column table with fixed-width columns.}
+% 	\centering % Horizontally center the table
+% 	\begin{tabular}{L{0.2\linewidth} L{0.2\linewidth} R{0.15\linewidth}} % Manually specify column alignments with L{}, R{} or C{} and widths as a fixed amount, usually as a proportion of \linewidth
+% 		\toprule
+% 		\multicolumn{2}{c}{Location} \\
+% 		\cmidrule(r){1-2}
+% 		East Distance & West Distance & Count \\
+% 		\midrule
+% 		100km & 200km & 422 \\
+% 		350km & 1000km & 1833 \\
+% 		600km & 1200km & 890 \\
+% 		\bottomrule
+% 	\end{tabular}
+% \end{table*}
+
+% Aenean feugiat pellentesque venenatis. Sed faucibus tristique tortor vel ultrices. Donec consequat tellus sapien. Nam bibendum urna mauris, eget sagittis justo gravida vel. Mauris nisi lacus, malesuada sit amet neque ut, venenatis tempor orci. Curabitur feugiat sagittis molestie. Duis euismod arcu vitae quam scelerisque facilisis. Praesent volutpat eleifend tortor, in malesuada dui egestas id. Donec finibus ac risus sed pellentesque. Donec malesuada non magna nec feugiat. Mauris eget nibh nec orci congue porttitor vitae eu erat. Sed commodo ipsum ipsum, in elementum neque gravida euismod. Cras mi lacus, pulvinar ut sapien ut, rutrum sagittis dui. Donec non est a metus varius finibus. Pellentesque rutrum pellentesque ligula, vitae accumsan nulla hendrerit ut.
+
+% \begin{figure} % Single column figure
+% 	\includegraphics[width=\linewidth]{Tolmukapea.jpg}
+% 	\caption{Anther of thale cress (Arabidopsis thaliana), fluorescence micrograph. Source: Heiti Paves, \href{https://commons.wikimedia.org/wiki/File:Tolmukapea.jpg}{https://commons.wiki-\\media.org/wiki/File:Tolmukapea.jpg}.}
+% 	\label{fig:tcanther}
+% \end{figure}
+
+% Referencing a figure using its label: Figure \ref{fig:tcanther}.
+
+% Aenean porttitor eros non pharetra congue. Proin in odio in dolor luctus auctor ac et mi. Etiam euismod mi sed lectus fringilla pretium. Phasellus tristique maximus lectus et sodales. Mauris feugiat ligula quis semper luctus. Nam sit amet felis sed leo fermentum aliquet. Mauris arcu dui, posuere id sem eget, cursus pulvinar mi. Donec nec lacus non lectus fermentum scelerisque et at nibh. Sed tristique, metus ac vestibulum porta, tortor lectus placerat lorem, et convallis tellus dolor eget ante. Pellentesque dui ligula, hendrerit a purus et, volutpat tempor lectus. Mauris nec purus nec mauris rhoncus pellentesque. Quisque quis diam sed est lacinia congue. Donec magna est, hendrerit sed metus vel, accumsan rutrum nibh.
+
+% \begin{figure*} % Two column figure (notice the starred environment)
+% 	\includegraphics[width=\linewidth]{Fibroblastid.jpg}
+% 	\caption{Bovine pulmonary artery endothelial cells in culture. Blue: nuclei; red: mitochondria; green: microfilaments. Computer generated image from a 3D model based on a confocal laser scanning microscopy using fluorescent marker dyes. Source: Heiti Paves, \href{https://commons.wikimedia.org/wiki/File:Fibroblastid.jpg}{https://commons.wikimedia.org/wiki/File:Fibroblastid.jpg}.}
+% 	\label{fig:bpartery}
+% \end{figure*}
+
+% Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam cursus lectus purus, tempus iaculis quam dictum tristique. Nam interdum sapien nec tempor mattis. Quisque id sapien nisi. Mauris vehicula ornare eros vel efficitur. Nulla consectetur, turpis quis fringilla tincidunt, mi neque iaculis lectus, vel commodo elit odio non ex. Duis facilisis, purus ac viverra iaculis, turpis lectus ultrices ante, ac vestibulum ligula magna in libero. Etiam tristique maximus lacinia. Vestibulum hendrerit, lacus malesuada laoreet blandit, sapien velit sollicitudin nunc, eu porttitor urna ligula at lorem. Aliquam faucibus eros in fermentum venenatis. Fusce consectetur congue pellentesque. Suspendisse at nisi sit amet est porttitor cursus. Cras placerat faucibus nunc, a laoreet justo dignissim sit amet.
+
+% \subsection{International Support}
+
+% \noindent àáâäãåèéêëìíîïòóôöõøùúûüÿýñçčšž
+
+% \noindent ÀÁÂÄÃÅÈÉÊËÌÍÎÏÒÓÔÖÕØÙÚÛÜŸÝÑ
+
+% \noindent ßÇŒÆČŠŽ
+
+% \subsection{Links}
+
+% This is a clickable URL link: \href{https://www.latextemplates.com}{LaTeX Templates}. This is a clickable email link: \href{mailto:vel@latextemplates.com}{vel@latextemplates.com}. This is a clickable monospaced URL link: \url{https://www.LaTeXTemplates.com}.
+
+% %------------------------------------------------
+
+% \section{Discussion}
+
+% This statement requires citation \autocite{Smith:2023qr}. This statement requires multiple citations \autocite{Smith:2023qr, Smith:2024jd}. This statement contains an in-text citation, for directly referring to a citation like so: \textcite{Smith:2024jd}.
+
+% \subsection{Subsection One}
+
+% Suspendisse potenti. Vivamus suscipit dapibus metus. Proin auctor iaculis ex, id fermentum lectus dapibus tristique. Nullam maximus eros eget leo pretium dapibus. Nunc in auctor erat, id interdum risus. Suspendisse aliquet vehicula accumsan. In vestibulum efficitur dictum. Sed ultrices, libero nec fringilla feugiat, elit massa auctor ligula, vehicula tempor ligula felis in lectus. Suspendisse sem dui, pharetra ut sodales eu, suscipit sit amet felis. Donec pretium viverra ante, ac pulvinar eros. Suspendisse gravida consectetur urna. Pellentesque vitae leo porta, imperdiet eros eget, posuere sem. Praesent eget leo efficitur odio bibendum condimentum sit amet vel ex. Nunc maximus quam orci, quis pulvinar nibh eleifend ac. Quisque consequat lacus magna, eu posuere tellus iaculis ac. Sed vitae tortor tincidunt ante sagittis iaculis.
+
+% \subsection{Subsection Two}
+
+% Nullam mollis tellus lorem, sed congue ipsum euismod a. Donec pulvinar neque sed ligula ornare sodales. Nulla sagittis vel lectus nec laoreet. Nulla volutpat malesuada turpis at ultricies. Ut luctus velit odio, sagittis volutpat erat aliquet vel. Donec ac neque eget neque volutpat mollis. Vestibulum viverra ligula et sapien bibendum, vel vulputate ex euismod. Curabitur nec velit velit. Aliquam vulputate lorem elit, id tempus nisl finibus sit amet. Curabitur ex turpis, consequat at lectus id, imperdiet molestie augue. Curabitur eu eros molestie purus commodo hendrerit. Quisque auctor ipsum nec mauris malesuada, non fringilla nibh viverra. Quisque gravida, metus quis semper pulvinar, dolor nisl suscipit leo, vestibulum volutpat ante justo ultrices diam. Sed id facilisis turpis, et aliquet eros.
+
+% \subsubsection{Subsubsection Example}
+
+% Duis venenatis eget lectus a aliquet. Integer vulputate ante suscipit felis feugiat rutrum. Aliquam eget dolor eu augue elementum ornare. Nulla fringilla interdum volutpat. Sed tincidunt, neque quis imperdiet hendrerit, turpis sapien ornare justo, ac blandit felis sem quis diam. Proin luctus urna sit amet felis tincidunt, sed congue nunc pellentesque. Ut faucibus a magna faucibus finibus. Etiam id mi euismod, auctor nisi eget, pretium metus. Proin tincidunt interdum mi non interdum. Donec semper luctus dolor at elementum. Aenean eu congue tortor, sed hendrerit magna. Quisque a dolor ante. Mauris semper id urna id gravida. Vestibulum mi tortor, finibus eu felis in, vehicula aliquam mi.
+
+% Aliquam arcu turpis, ultrices sed luctus ac, vehicula id metus. Morbi eu feugiat velit, et tempus augue. Proin ac mattis tortor. Donec tincidunt, ante rhoncus luctus semper, arcu lorem lobortis justo, nec convallis ante quam quis lectus. Aenean tincidunt sodales massa, et hendrerit tellus mattis ac. Sed non pretium nibh. 
+
+% Donec cursus maximus luctus. Vivamus lobortis eros et massa porta porttitor. Nam vitae suscipit mi. Pellentesque ex tellus, iaculis vel libero at, cursus pretium sapien. Curabitur accumsan velit sit amet nulla lobortis, ut pretium ex aliquam. Proin eget volutpat orci. Morbi eu aliquet turpis. Vivamus molestie urna quis tempor tristique. Proin hendrerit sem nec tempor sollicitudin.
+
+%----------------------------------------------------------------------------------------
+%	 REFERENCES
+%----------------------------------------------------------------------------------------
+
+\printbibliography % Output the bibliography
+
+%----------------------------------------------------------------------------------------
+
+\end{document}
