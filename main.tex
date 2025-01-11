@@ -56,7 +56,7 @@
 % Full-width abstract
 \renewcommand{\maketitlehookd}{%
 	\begin{abstract}
-		\noindent Serverless computing has gained importance in both academia and industry due to its cost-efficiency, automated scalability, and virtually unlimited resource availability, offering a novel pay-as-you-go model compared to traditional cloud computing solutions. The serverless paradigm not only eases end-users of the burden of infrastructure management, but its cost model enables users to pay only for resources consumed, while the provider bears the cost of idle resources. However, the stateless nature of the services offered and communication needs of related executions are problems that need to be addressed, as they could pose performance issues and limit the applications of the paradigm. This survey provides an overview of the current advancements in serverless computing, examining its opportunities, challenges, and potential solutions. 
+		\noindent Serverless computing has gained importance in both academia and industry due to its cost-efficiency, automated scalability, and virtually unlimited resource availability, offering a novel pay-as-you-go model compared to traditional cloud computing solutions. The serverless paradigm not only eases end-users of the burden of infrastructure management, but its cost model enables users to pay only for resources consumed, while the provider bears the cost of idle resources. However, the stateless nature of the services offered and communication needs of related executions are problems that need to be addressed, as they could pose performance issues and limit the applications of the paradigm. This study provides an overview of the current advancements in serverless computing, examining its opportunities, challenges, and potential solutions. 
 	\end{abstract}
 }
 
@@ -71,10 +71,11 @@
 %----------------------------------------------------------------------------------------
 
 \section{Introduction}
+\label{sec:introduction}
 
-Traditional cloud computing paradigms such as \textit{Infrastructure-as-a-service (IaaS)} offer on-demand access to computing resources. However, the end-users need to reserve resources based on the peak usage of their applications, and this exclusive allocation results in a strong under utilization of data centers by only about 10\% on average \cite{li_serverless_2022}. Therefore, serverless computing has gained traction as a way to address this criticality, and most large technology companies offer serverless platforms. While there are slight differences among the services offered on the market, the fundamental idea is similar: a pay-as-you-model that enables end-users to run their services transparently from the underlying infrastructure. The serverless platforms take care of all the system administration tasks, including configuration, deployment, and scaling management, while the users focus on the functionalities they intend to provide.
+Traditional cloud computing paradigms such as \textit{Infrastructure-as-a-service (IaaS)} offer on-demand access to computing resources. However, the end-users need to configure the machines and deploy autonomously. They also need to reserve resources based on the peak usage of their applications, and this exclusive allocation results in a strong under utilization of data centers by only about 10\% on average \cite{li_serverless_2022}. Therefore, serverless computing has gained traction as a way to address these criticalities, and most large technology companies offer serverless platforms. While there are slight differences among the services offered on the market, the fundamental idea is similar: a pay-as-you-model that enables end-users to run their services transparently from the underlying infrastructure. The serverless platforms take care of all the system administration tasks, including configuration, deployment, and scaling management, while the users focus on the functionalities they intend to provide.
 
-Serverless makes use of the \textit{Function-as-a-service (FaaS)} paradigm, by which end-users can enable the services' deployment to the platforms. In this paradigm, an application is sliced into functions that are then sent to the platform; their execution is event-driven, meaning each function runs in response to an event, and the provider manages their scheduling. The functions are not hidden from the provider, it knows information such as the external dependencies and the runtime environment. Specifically, the following data are necessary to define a function, as explained in the implementation provided by McGrath et al. \cite{mcgrath_serverless_2017}:
+Serverless makes use of the \textit{Function-as-a-service (FaaS)} paradigm, allowing end-users to easily deploy services to external providers. In this paradigm, an application is sliced into functions that are then sent to a platform; their execution is event-driven, meaning each function runs in response to an event, and the provider manages their scheduling. The functions are not hidden from the provider: it knows information such as the external dependencies and the runtime environment, and produces logs about the executions as well. Specifically, the following data are necessary to define a function, as explained in the implementation provided by McGrath et al. \cite{mcgrath_serverless_2017}:
 
 \begin{itemize}
 	\item \textbf{Function identifier}: a randomly generated Global Unique Identifier to identify and locate function's resources.
@@ -86,8 +87,8 @@ Serverless makes use of the \textit{Function-as-a-service (FaaS)} paradigm, by w
 While serverless and FaaS are often used interchangeably, they represent different concepts: FaaS is a paradigm used in serverless computing to enable function isolation and invocation, delegating their execution to an external provider, and while it is essential to serverless computing, Backend-as-a-Service (BaaS) is a fundamental component of serverless as well. BaaS is a cloud service model originally used for mobile and web development, used to outsource backend aspects of these services, such as hosting and database management. It has been grown beyond just mobile-centric services to encompass serverless as well, since it provides overall backend support for this type of service. As stated in Berkley View \cite{jonas_cloud_2019}, serverless is defined as \textit{FaaS + BaaS}. A serverless system is made of various parts:
 
 \begin{itemize}
-	\item A \textbf{controller} manages the execution of functions; it is event-driven and triggered by events created consequently to users' actions, such as REST-ful HTTP queries or new data added to a storage driver.
-	\item A \textbf{database} contains the users' functions and the output of completed executions.
+	\item A \textbf{controller} manages the execution of functions; it is event-driven and triggered by events created consequently to users' actions, such as REST-ful HTTP queries or adding new data to a database.
+	\item A \textbf{database} contains the users' functions code and the output of completed executions.
 	\item Functions are executed in \textbf{sandboxed containers}. After the execution, the output is saved to the database. Logfiles are produced and sent to the provider, to then be used to optimize further executions of the function \cite{shafiei_serverless_2022}.
 \end{itemize}
 
@@ -100,35 +101,35 @@ While serverless and FaaS are often used interchangeably, they represent differe
 An example of an asynchronous invocation in serverless computing is depicted in Figure \ref{fig:serverlessexecution}. 
 
 \subsection{Methodology}
-Serverless computing is a broad and complex topic that covers many subtopics, such as performance, security or caching. 
+Serverless computing is a broad and complex topic that is closely linked to various other topics, such as performance, security or caching. 
 
-While some publications focus on a specific subtopic, reviewing the latest academic literature in that area, this work firstly takes a broader approach by analyzing surveys and articles to offer a comprehensive overview of the topic from multiple perspectives.
+While some publications focus on specific areas by reviewing the latest academic literature in those fields, this work adopts a broader approach by analyzing surveys and articles to provide a comprehensive overview from multiple perspectives. 
 
-Then, it explores innovative and notable studies addressing individual challenges, ultimately providing a holistic perspective on serverless computing.
+Additionally, it explores innovative and notable studies addressing individual challenges, ultimately offering a holistic perspective on serverless computing.
 
 \section{Performance}
 \label{sec:performance}
-As mentioned above, the execution of functions is performed in isolate sandboxes. Based on the status of the containers, two types of startups are defined:
+As mentioned in Section \ref{sec:introduction}, the execution of functions is performed in isolate sandboxes. Based on the status of the containers, two types of startups are defined:
 
 \begin{itemize}
 	\item \textbf{Warm start}: it is the case where a sandbox from a previous execution that just concluded is reused
-	\item \textbf{Cold start}: it is the case where a new sandbox is started upon the function's execution, or it was precedently hibertaned by the provider to decrease its energy consumption
+	\item \textbf{Cold start}: it is the case where a new sandbox is started upon the function's execution, or it was previously hibernated by the provider to decrease its energy consumption
 \end{itemize}
 
-A cold start incurs in a higher delay, which it is dominated by the setup of the software environment (e.g. load libraries) that can take up to tens of seconds \cite{jonas_cloud_2019}. Copik et al. \cite{copik_rfaas_2023} measured the execution of an empty C++ function with various providers, resulting in startup delays in the order of tens or hundreds of milliseconds depending on the provider. Moreover, the provider takes cares of the scheduling, allocating computer resources to various customers; therefore, there is always a risk of queuing delays in case of high demand for the service.
+A cold start incurs in a higher delay, which is dominated by the setup of the software environment (e.g. libraries loading), and can take up to tens of seconds \cite{jonas_cloud_2019}. Copik et al. \cite{copik_rfaas_2023} measured the execution of an empty C++ function with various providers, resulting in startup delays in the order of tens or hundreds of milliseconds depending on the provider. Moreover, the provider takes cares of the scheduling, allocating computer resources to various customers; therefore, there is always a risk of queuing delays in case of high demand for the service.
 
 These delays are particularly critical for High-Perfomance Computing (HPC) applications. \textit{rFaaS} \cite{jonas_cloud_2019} aims to make serverless usable for tasks that need low-latency invocations, employing RDMA to reduce the number of parties involved in a function call and avoiding the use of protocols such as HTTP and RPC to transfer data. 
 
-It introduces the topic of leasing, that allow clients to reserve computational units on the server. In particular, a resource manager handles a group of \textit{spot executor}, computational entities that execute functions and are assigned a part of the available resources. The managers handle idle resources to obtain load balancing and accept connections from clients. When a client wishes to use the service, a manager connects it to a \textit{spot executor} that will then handle invocation and execution of functions. The client acquires a lease on the resources managed by the spot executor to achieve the desired number of parallel workers, and functions are then invoked directly by the client efficiently, by writing directly to the executor's memory the function header and the payload using RDMA. The output is returned in a similar fashion and the billing data is finally handled by the resource manager the client firstly connected to. 
+It introduces the topic of leasing, that allow clients to reserve computational units on the server. In particular, a resource manager handles a group of \textit{spot executor}, computational entities that execute functions and are assigned a part of the available resources. The managers handle idle resources to obtain load balancing and accept connections from clients. When a client wishes to use the service, a manager connects it to a \textit{spot executor} that will then manage invocation and execution of functions. The client acquires a lease on the resources managed by the spot executor to achieve the desired number of parallel workers, and to trigger function invocations efficiently, the client writes the function header and the payload directly to the executor's memory using RDMA. The output is returned in a similar fashion and the billing data is finally handled by the resource manager the client firstly connected to. 
 
-To reduce the startup delays, alongside warm and cold executions, \textit{rFaaS} introduces the concept of hot invocations, a sandbox state where after a request is completed the threads continue to active poll for invocation requests. Busy polling decreases the invocation latency since threads do not enter blocked states waiting for RDMA events. This operation come at the cost of occupying the CPU, and so it should be considered as active computation time, but the executors can switch back to normal warm mode after a configurable amount of time to free the CPU. 
+To reduce the startup delays, alongside warm and cold executions, \textit{rFaaS} introduces the concept of hot invocations, a sandbox state where, after a request is completed, the threads continue to active poll for invocation requests. Busy polling decreases the invocation latency since threads do not enter blocked states waiting for RDMA events. This operation comes at the cost of occupying the CPU, and so it should be considered as active computation time; the executors can switch back to normal warm mode after a configurable amount of time to free the CPU. 
 
 The use of hot containers decreases the overall overhead to about 350 nanoseconds on top of the fastest available network transmission. While this implementation of a RMDA-accelerated serverless platform requires specific hardware and lacks some features offered by cloud providers, such as shared storage or affordable costs, it is a great attempt to adapt serverless computing to scenarios with strict constraints in terms of latency.
 
 \section{Cost-effectiveness}
 Serverless computing appears more expensive than traditional cloud computing at a first analysis: the cost of per-minute execution of an AWS Lambda function compared to an AWS t3.nano VM is 7.5 times as expensive. As Schleier et al. \cite{schleier-smith_what_2021}observe, however, serverless providers include in the price the cost of redundancy for ensuring availability, auto-scaling, monitoring and logging, which are functionalities that are under the responsibility of developers in traditional cloud computing approaches (which this work refers to as ``serverful''), or have to be purchased as separate services.
 
-Another advantage of serverless computing included in the bill is its cost model, a pay-as-you-go pricing where the end-users pay only based on the actual resources used, and while the expense of idle resources is covered by the cloud provider, as depicted in Figure \ref{fig:serverlesscost}.
+Another benefit of serverless computing highlighted in the report is its cost model, which follows a pay-as-you-go pricing structure. In this model, end-users are charged only for the resources they actually consume, while the cloud provider covers the costs of any idle resources. This is illustrated in Figure \ref{fig:serverlesscost}.
 
 \begin{figure*}
 	\includegraphics[width=\linewidth]{serverlesscost.png}
@@ -136,7 +137,7 @@ Another advantage of serverless computing included in the bill is its cost model
 	\label{fig:serverlesscost}
 \end{figure*}
 
-Even with dynamic resource allocation, serverful computing operates on a reservation model, requiring computing resources to be allocated based on the application's peak usage. As Castro et al. point out \cite{schleier-smith_what_2021}, in practice, customer realize saving when moving their applications to serverless, but the price reductions and the increased functionalities offered by the cloud providers could threaten their revenues. 
+Even with dynamic resource allocation, serverful computing operates on a reservation model, requiring computing resources to be allocated based on the application's peak usage, which leads to a very large underutilization of resources. As Castro et al. point out \cite{schleier-smith_what_2021}, in practice, customer realize saving when moving their applications to serverless, but the price reductions and the increased functionalities offered by the cloud providers could threaten their revenues. 
 
 Due to reduced costs for customers, providers may worry about declining revenues; however, as noted by the Jevons Paradox \cite{alcott_jevons_2005}, lower prices and fewer customer responsibilities can stimulate demand, offsetting the price decrease and potentially boosting providers’ earnings. 
 
