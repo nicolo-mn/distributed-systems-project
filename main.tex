@@ -163,7 +163,6 @@ On the bright side, serverless can act as a security enabler under some points o
 	\item It relieves developers of some security concerns: security becomes a shared concern between the developers and the providers. While the providers take care of many security tasks, especially related to the infrastructure, developers still need to the heavily involved in security matters, securing their workflows by preventing functions' vulnerabilities, limiting execution privileges and securing the data on the cloud. 
 \end{itemize}
 
-
 \section{Data Caching}
 \label{sec:caching}
 \begin{figure*}[!hbt]
@@ -171,23 +170,14 @@ On the bright side, serverless can act as a security enabler under some points o
 	\caption{InfiniCache workflow. Source: \href{https://mikhail.io/2020/03/infinicache-distributed-cache-on-aws-lambda/}{www.mikhail.io}}
 	\label{fig:infinicache}
 \end{figure*}
-
 Applications across various domains frequently rely on querying databases to retrieve and manipulate data essential for their functionality, which in the case of serverless platforms are cloud databases. Querying cloud databases may result in bottlenecks due to the latencies of persistent storage. Serverful systems use multiple level of caches, but this approach can be challenging to implement in serverless environments, given the stateless nature of the functions.
-
-Since the lack of caching makes the serverless services infeasible in real-world scenarios, there were various attempts to implement caching, mainly in-memory and distributed on multiple nodes. Amazon developed ElastiCache\footnote{\url{https://aws.amazon.com/elasticache/}}, an in-memory cache and data store, which is at least 700x more expensive compared to the Amazon S3 (Amazon's cloud storage service\footnote{\url{https://aws.amazon.com/s3/}}) \cite{shafiei_serverless_2022}, open source alternatives such as InfiniCache \cite{wang_infinicache_nodate} were also implemented. 
-
+Since the lack of caching makes the serverless services infeasible in real-world scenarios, there were various attempts to implement caching, mainly in-memory and distributed on multiple nodes. Amazon developed ElastiCache\footnote{\url{https://aws.amazon.com/elasticache/}}, an in-memory cache and data store, but it is at least 700x more expensive compared to the Amazon S3 (Amazon's cloud storage service\footnote{\url{https://aws.amazon.com/s3/}}) \cite{shafiei_serverless_2022}, therefore, open source alternatives such as InfiniCache \cite{wang_infinicache_nodate} were also implemented. 
 The implementation of a distributed cache is not straightforward\footnote{An in-depth explanation of the problem can be found at \url{https://mikhail.io/2020/03/infinicache-distributed-cache-on-aws-lambda/}}: a first idea that might come to mind is caching data between requests in an in-memory hashmap; however, the size of functions is limited to some gigabytes by serverless providers, and every instance of the same function would need to keep in the memory potentially the same data (for example, in the case of parallel requests).
-
-Another option would be to implement a simple distributed caching system by moving the cache in multiple functions that contains a portion of the data, a big upside would be the caching pay model: cost is charged only when data is requested (i.e. new function instances need to be created), while cluster-based services charge for memory capacity whether cached objects are accessed or not.
-
+Another option would be to implement a simple distributed caching system by moving the cache in multiple functions (units of execution) that contains a portion of the data, a big upside of this approach would be the caching pay model: cost is charged only when data is requested (i.e. new function instances need to be created), while cluster-based services charge for memory capacity whether cached objects are accessed or not.
 However, serverless functions are not designed for stateful use cases: they have limited resources (both CPU and memory-wise) and can run for some minutes at most. Moreover, providers such as AWS Lambda reserve the right to terminate idle functions at any time.
-
-
-InfiniCache tackles these problems with a component (in the paper referred as ``Proxy'') that manages multiple functions that hold slices of data. The client communicates with the proxy, which orchestrates the caching transparently from the client, as depicted in Figure \ref{fig:infinicache}.
-
-InfiniCache is implemented on AWS Lambda, where the provider can claim idle instances at any time, InfiniCache implements a backup mechanism for functions as well, creating redundancy with multiple functions containing the same data. In this way, if the proxy has to retrieve data in the cache, but the primary instance containing it was shut down, it can reroute the request to its backup.
-
-On AWS Lambda the functions (called ``Lambdas'' on AWS Lambda) cannot receive TCP or UDP connections; therefore, to allow communication with the proxy, the proxy's IP and port are passed as parameters during the function invocation and the Lambda itself initializes a TCP connection towards the Proxy during initialization, as shown in Figure \ref{fig:lambdainvocation}. 
+InfiniCache tackles these problems with a component (referred in the paper as ``Proxy'') that manages multiple functions that hold slices of data. The client communicates with the proxy, which orchestrates the caching transparently from the client, as depicted in Figure \ref{fig:infinicache}.
+Since InfiniCache is implemented on AWS Lambda, where the provider can claim idle instances at any time, it implements a backup mechanism for functions as well, creating redundancy with multiple functions containing the same data. In this way, if the proxy has to retrieve data in the cache, but the primary instance containing the requested data was shut down, it can reroute the request to its backup.
+On AWS Lambda the functions (called ``Lambdas'' on AWS Lambda) cannot receive TCP or UDP connections; therefore, to allow communication with the proxy, the proxy's IP and port are passed as parameters during the function invocation and the Lambda itself starts a TCP connection towards the Proxy during initialization, as shown in Figure \ref{fig:lambdainvocation}. 
 
 \begin{figure}[!hbt]
 	\includegraphics[width=\linewidth]{lambdainvocation.png}
