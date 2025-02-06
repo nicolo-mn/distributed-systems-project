@@ -27,6 +27,13 @@
 	twoside, % Two side traditional mode where headers and footers change between odd and even pages, comment this option to make them fixed
 ]{LTJournalArticle}
 
+\usepackage{tikz} % Required for the circledColorSmall command
+\usepackage{xcolor} % Required for the circledColorSmall command
+
+\DeclareRobustCommand*\circledColorSmall[2]{\tikz[baseline=(char.base)]{
+    \node[shape=circle,fill=#2,draw=#2,inner sep=0pt] (char) {\textcolor{white}{\footnotesize\textbf{#1}}};}}
+
+
 \addbibresource{DSBib.bib} % BibLaTeX bibliography file
 
 \runninghead{An Overview on Serverless Computing, its Opportunities and its Challenges} % A shortened article title to appear in the running head, leave this command empty for no running head
@@ -92,6 +99,15 @@ While serverless and FaaS are often used interchangeably, they represent differe
 	\item Functions are executed in \textbf{sandboxed containers}. After the execution, the output is saved to the database. Logfiles are produced and sent to the provider, to then be used to optimize further executions of the function \cite{shafiei_serverless_2022}.
 \end{itemize}
 
+Based on the status of the containers, two types of startups are defined:
+
+\begin{itemize}
+	\item \textbf{Warm start}: it is the case where a sandbox from a previous execution that just concluded is reused
+	\item \textbf{Cold start}: it is the case where a new sandbox is started upon the function's execution, or it was previously hibernated by the provider to decrease its energy consumption
+\end{itemize}
+
+A cold start incurs in a higher delay, which is dominated by the setup of the software environment (e.g. libraries loading), and can take up to tens of seconds \cite{jonas_cloud_2019}. Copik et al. \cite{copik_rfaas_2023} measured the execution of an empty C++ function with various providers, resulting in startup delays in the order of tens or hundreds of milliseconds depending on the provider. Moreover, the provider takes cares of the scheduling, allocating computer resources to various customers; therefore, there is always a risk of queuing delays in case of high demand for the service.
+
 \begin{figure*}[!htb]
 	\includegraphics[width=\linewidth]{serverlessexecution.png}
 	\caption{Example of an asynchronous invocation. Source: \cite{li_serverless_2022}}
@@ -107,26 +123,8 @@ While some publications focus on specific areas by reviewing the latest academic
 
 Additionally, it explores innovative and notable studies addressing individual challenges, ultimately offering a holistic perspective on serverless computing.
 
-\section{Performance}
-\label{sec:performance}
-As mentioned in Section \ref{sec:introduction}, the execution of functions is performed in isolate sandboxes. Based on the status of the containers, two types of startups are defined:
-
-\begin{itemize}
-	\item \textbf{Warm start}: it is the case where a sandbox from a previous execution that just concluded is reused
-	\item \textbf{Cold start}: it is the case where a new sandbox is started upon the function's execution, or it was previously hibernated by the provider to decrease its energy consumption
-\end{itemize}
-
-A cold start incurs in a higher delay, which is dominated by the setup of the software environment (e.g. libraries loading), and can take up to tens of seconds \cite{jonas_cloud_2019}. Copik et al. \cite{copik_rfaas_2023} measured the execution of an empty C++ function with various providers, resulting in startup delays in the order of tens or hundreds of milliseconds depending on the provider. Moreover, the provider takes cares of the scheduling, allocating computer resources to various customers; therefore, there is always a risk of queuing delays in case of high demand for the service.
-
-These delays are particularly critical for High-Perfomance Computing (HPC) applications. \textit{rFaaS} \cite{jonas_cloud_2019} aims to make serverless usable for tasks that need low-latency invocations, employing RDMA to reduce the number of parties involved in a function call and avoiding the use of protocols such as HTTP and RPC to transfer data. 
-
-It introduces the topic of leasing, that allow clients to reserve computational units on the server. In particular, a resource manager handles a group of \textit{spot executor}, computational entities that execute functions and are assigned a part of the available resources. The managers handle idle resources to obtain load balancing and accept connections from clients. When a client wishes to use the service, a manager connects it to a \textit{spot executor} that will then manage invocation and execution of functions. The client acquires a lease on the resources managed by the spot executor to achieve the desired number of parallel workers, and to trigger function invocations efficiently, the client writes the function header and the payload directly to the executor's memory using RDMA. The output is returned in a similar fashion and the billing data is finally handled by the resource manager the client firstly connected to. 
-
-To reduce the startup delays, alongside warm and cold executions, \textit{rFaaS} introduces the concept of hot invocations, a sandbox state where, after a request is completed, the threads continue to active poll for invocation requests. Busy polling decreases the invocation latency since threads do not enter blocked states waiting for RDMA events. This operation comes at the cost of occupying the CPU, and so it should be considered as active computation time; the executors can switch back to normal warm mode after a configurable amount of time to free the CPU. 
-
-The use of hot containers decreases the overall overhead to about 350 nanoseconds on top of the fastest available network transmission. While this implementation of a RMDA-accelerated serverless platform requires specific hardware and lacks some features offered by cloud providers, such as shared storage or affordable costs, it is a great attempt to adapt serverless computing to scenarios with strict constraints in terms of latency.
-
 \section{Cost-effectiveness}
+\label{sec:costeffectiveness}
 Serverless computing appears more expensive than traditional cloud computing at a first analysis: the cost of per-minute execution of an AWS Lambda function compared to an AWS t3.nano VM is 7.5 times as expensive. As Schleier et al. \cite{schleier-smith_what_2021}observe, however, serverless providers include in the price the cost of redundancy for ensuring availability, auto-scaling, monitoring and logging, which are functionalities that are under the responsibility of developers in traditional cloud computing approaches (which this work refers to as ``serverful''), or have to be purchased as separate services.
 
 Another benefit of serverless computing highlighted in the report is its cost model, which follows a pay-as-you-go pricing structure. In this model, end-users are charged only for the resources they actually consume, while the cloud provider covers the costs of any idle resources. This is illustrated in Figure \ref{fig:serverlesscost}.
@@ -142,7 +140,7 @@ Even with dynamic resource allocation, serverful computing operates on a reserva
 Due to reduced costs for customers, providers may worry about declining revenues; however, as noted by the Jevons Paradox \cite{alcott_jevons_2005}, lower prices and fewer customer responsibilities can stimulate demand, offsetting the price decrease and potentially boosting providers’ earnings. 
 
 \section{Security and Privacy}
-Since the services provided are executed on the cloud and serverless computing is inherently event-driven, authentication becomes a critical challenge: only authorized applications should be able to trigger events that start function executions on the cloud, otherwise a freeloader could take advantage of the available resources of the victims, as \cite{shafiei_serverless_2022} points out. Specific tokens could be included in requests, as Amazon Lambda implements\footnote{\url{https://docs.aws.amazon.com/apigateway/}}, but the token could be extracted and reused if the message is sent through an unsecured network. 
+Since the services provided are executed on the cloud and serverless computing is inherently event-driven, authentication becomes a critical challenge: only authorized applications should be able to trigger events that start function executions on the cloud, otherwise a freeloader could take advantage of the available resources of the victims \cite{shafiei_serverless_2022}. Specific tokens could be included in requests to address this issue, as Amazon Lambda implements\footnote{\url{https://docs.aws.amazon.com/apigateway/}}, but the token could be extracted and reused if the message is sent through an unsecured network. 
 
 An effective solution would be to use SSL/TLS protocols \cite{freier_secure_2011, rescorla_transport_2018}, but it may be beyond the capabilities of low-energy IoT devices. Using IoT devices in serverless environments is not uncommon: given the auto-scalability property of serverless, it can easily handle large bursts of requests, as is often the case when IoT systems monitor environmental conditions that can trigger large numbers of events (consider, for example, the case of an earthquake detection network that might rapidly generate extensive data whenever seismic activity is detected).
 
@@ -196,6 +194,32 @@ On AWS Lambda the functions (called ``Lambdas'' on AWS Lambda) cannot receive TC
 	\label{fig:lambdainvocation}
 \end{figure}
 
+\section{Performance}
+\label{sec:performance}
+% As mentioned in Section \ref{sec:introduction}, the execution of functions is performed in isolate sandboxes. 
+
+% These delays are particularly critical for High-Perfomance Computing (HPC) applications. \textit{rFaaS} \cite{jonas_cloud_2019} aims to make serverless usable for tasks that need low-latency invocations, employing RDMA to reduce the number of parties involved in a function call and avoiding the use of protocols such as HTTP and RPC to transfer data. 
+
+% It introduces the topic of leasing, that allow clients to reserve computational units on the server. In particular, a resource manager handles a group of \textit{spot executor}, computational entities that execute functions and are assigned a part of the available resources. The managers handle idle resources to obtain load balancing and accept connections from clients. When a client wishes to use the service, a manager connects it to a \textit{spot executor} that will then manage invocation and execution of functions. The client acquires a lease on the resources managed by the spot executor to achieve the desired number of parallel workers, and, to trigger function invocations efficiently, the client writes the function header and the payload directly to the executor's memory using RDMA. The output is returned in a similar fashion and the billing data is finally handled by the resource manager the client firstly connected to. 
+
+While modern cloud paradigms can bring elasticity to allocate idle resources and even reduce computational costs, as shown in Section \ref{sec:costeffectiveness}, its performance cannot match cluster allocations and coarse-grained cloud executions. Serverless poses some limitations to High-Performance Computing applications, since many platforms make use of centralized scheduling with a high number of parties involved in functions executions that increase execution latencies. Moreover, inefficient network transport protocols are used, limiting the use of serverless for latency-sensitive applications. To limit these issues and make serverless a feasible option for the aforementioned applications, \textit{rFaaS}, a Remote Direct Access Memory (RDMA) accelerated FaaS platform, aims to reduce execution latencies by limiting the overhead on the fastest available network.
+
+rFaaS introduces various components. Spot executors are entities that provide hardware and software resources to clients, to support the execution of serverless functions; each spot executor is assigned a part of the available resources.
+A spot executor includes:
+\begin{itemize}
+	\item User code executors, executor processes responsible for the execution of client code
+	\item A lightweight allocator, which is responsible for connecting new clients, managing code executors and the processes that are being executed, removing idle ones or those that are exceeding specific time limits
+\end{itemize}
+When a client wants to execute code it connects to a spot executor which initializes an isolated execution context with a user code executor. The client can then leverage the RDMA capabilities of the service to write functions headers and payloads directly to the code executor's memory. Spot executors are managed by entities called resource managers: each one is assigned a group of spot executors and interacts with data center resources, assigning them to spot executors when they become available. Resource managers also handle billing data for the clients. An important concept introduced by rFaaS is leasing: clients acquire leases on executor processes, and leverage them to perform consecutive executions on warmed up containers. Leases allow to avoid the initialization costs of reliable RDMA connections and limit the interaction between clients and resource managers: the latter is involved only once to acquire a lease, and not every time a function is invoked. The separation of concerns between resource managers and spot executors allows to reduce the critical path of invocations by removing a centralized gateway, ultimately reducing the number of parties involved in transmitting functions data. 
+
+% \circledColorSmall{C}{brown}
+
+% Spot executors include a lightweight allocator, which is responsible for connecting new clients, managing code executors and the processes that are being executed, removing idle ones or those that are exceeding specific time limits.
+
+To reduce the startup delays, alongside warm and cold executions, \textit{rFaaS} introduces the concept of hot invocations, a sandbox state where, after a request is completed, the threads continue to active poll for invocation requests. Busy polling decreases the invocation latency since threads do not enter blocked states waiting for RDMA events. This operation comes at the cost of occupying the CPU, and so it should be considered as active computation time; the executors can switch back to normal warm mode after a configurable amount of time to free the CPU. 
+
+The use of hot containers decreases the overall overhead to about 350 nanoseconds on top of the fastest available network transmission. While this implementation of a RMDA-accelerated serverless platform requires specific hardware and lacks some features offered by cloud providers, such as shared storage, it is a great attempt to adapt serverless computing to scenarios with strict latency constraints.
+
 
 \section{Scheduling}
 In serverless computing, the scheduling of functions is transparent from the users, and the providers, who take care of it, can optimize it based on many parameters. Shafiei et al. \cite{shafiei_serverless_2022} provide an in-depth analysis of the various scheduling policies available. 
@@ -210,7 +234,7 @@ Delays in serverless applications have multiple causes, including cold container
 While functions are stateless, it is not uncommon to depend on external data sources to perform the computations; therefore, scheduling strategies increasingly prioritize data locality. By placing functions closer to the data they process, providers can significantly reduce data transfer latencies, improving overall application performance.
 
 \section{Statistics on serverless usage}
-Despite the leading serverless platfor (AWS Lambda) was launched in 2015, serverless is still trending and growing. Datadog stated in its last report\footnote{\href{https://www.datadoghq.com/state-of-serverless/}{https://www.datadoghq.com/state-of-serverless/}} that AWS Lambda grew by 3\% from 2022 to 2023, while Azure and Google Cloud grew by 6\% and 7\% respectively. Python and Node.js are the leading languages used in serverless environments, and for good reasons: the average startup time of functions written in Java (which is the third leading language) is two times longer compared to Python or Node.js. This is because startup time is influenced by the memory allocated to a function, and more than 25\% of all Java functions allocate more than 1024 MB per function, compared to only about 10\% of functions written in Python and Node.js.
+Despite the leading serverless platform (AWS Lambda) was launched in 2015, serverless is still trending and growing. Datadog stated in its last report\footnote{\href{https://www.datadoghq.com/state-of-serverless/}{https://www.datadoghq.com/state-of-serverless/}} that AWS Lambda grew by 3\% from 2022 to 2023, while Azure and Google Cloud grew by 6\% and 7\% respectively. Python and Node.js are the leading languages used in serverless environments, and for good reasons: the average startup time of functions written in Java (which is the third leading language) is two times longer compared to Python or Node.js. This is because startup time is influenced by the memory allocated to a function, and more than 25\% of all Java functions allocate more than 1024 MB per function, compared to only about 10\% of functions written in Python and Node.js.
 
 \subsection{Functions Marketplaces}
 Functions marketplaces offer pre-built serverless functions to be easily deployed; the most notable example is the AWS Serverless Application Repository \footnote{https://serverlessrepo.aws.amazon.com/applications}, that counts more than 1100 functions. As Shafiei et al. \cite{shafiei_serverless_2022} point out, the competition on these platforms could result in an increase of functions quality, ultimately in favor of the customers. 
