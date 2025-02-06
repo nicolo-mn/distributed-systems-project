@@ -98,30 +98,22 @@ While serverless and FaaS are often used interchangeably, they represent differe
 	\item A \textbf{database} contains the users' functions code and the output of completed executions.
 	\item Functions are executed in \textbf{sandboxed containers}. After the execution, the output is saved to the database. Logfiles are produced and sent to the provider, to then be used to optimize further executions of the function \cite{shafiei_serverless_2022}.
 \end{itemize}
-
 Based on the status of the containers, two types of startups are defined:
 
 \begin{itemize}
 	\item \textbf{Warm start}: it is the case where a sandbox from a previous execution that just concluded is reused
 	\item \textbf{Cold start}: it is the case where a new sandbox is started upon the function's execution, or it was previously hibernated by the provider to decrease its energy consumption
 \end{itemize}
-
 A cold start incurs in a higher delay, which is dominated by the setup of the software environment (e.g. libraries loading), and can take up to tens of seconds \cite{jonas_cloud_2019}. Copik et al. \cite{copik_rfaas_2023} measured the execution of an empty C++ function with various providers, resulting in startup delays in the order of tens or hundreds of milliseconds depending on the provider. Moreover, the provider takes cares of the scheduling, allocating computer resources to various customers; therefore, there is always a risk of queuing delays in case of high demand for the service.
-
 \begin{figure*}[!htb]
 	\includegraphics[width=\linewidth]{serverlessexecution.png}
 	\caption{Example of an asynchronous invocation. Source: \cite{li_serverless_2022}}
 	\label{fig:serverlessexecution}
 \end{figure*}
-
 An example of an asynchronous invocation in serverless computing is depicted in Figure \ref{fig:serverlessexecution}. 
 
 \subsection{Methodology}
-Serverless computing is a broad and complex topic that is closely linked to various other topics, such as performance, security or caching. 
-
-While some publications focus on specific areas by reviewing the latest academic literature in those fields, this work adopts a broader approach by analyzing surveys and articles to provide a comprehensive overview from multiple perspectives. 
-
-Additionally, it explores innovative and notable studies addressing individual challenges, ultimately offering a holistic perspective on serverless computing.
+Serverless computing is a broad and complex topic that is closely linked to various other topics, such as performance, security or caching. While some publications focus on specific areas by reviewing the latest academic literature in those fields, this work adopts a broader approach in order to provide a comprehensive overview from multiple perspectives. It first analyzes surveys and articles to cover critical topics closely connected to serverless computing and, additionally, it explores innovative and notable studies addressing individual challenges, ultimately offering a holistic perspective on serverless computing.
 
 \section{Cost-effectiveness}
 \label{sec:costeffectiveness}
