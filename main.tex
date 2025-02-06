@@ -117,9 +117,9 @@ Serverless computing is a broad and complex topic that is closely linked to vari
 
 \section{Cost-effectiveness}
 \label{sec:costeffectiveness}
-Serverless computing appears more expensive than traditional cloud computing at a first analysis: the cost of per-minute execution of an AWS Lambda function compared to an AWS t3.nano VM is 7.5 times as expensive. As Schleier et al. \cite{schleier-smith_what_2021}observe, however, serverless providers include in the price the cost of redundancy for ensuring availability, auto-scaling, monitoring and logging, which are functionalities that are under the responsibility of developers in traditional cloud computing approaches (which this work refers to as ``serverful''), or have to be purchased as separate services.
+Serverless computing appears more expensive than traditional cloud computing at a first analysis: the cost of per-minute execution of an AWS Lambda function compared to an AWS t3.nano VM is 7.5 times as expensive. As Schleier et al. observe \cite{schleier-smith_what_2021}, however, serverless providers include in the price the cost of redundancy for ensuring availability, auto-scaling, monitoring and logging, which are functionalities that are under the responsibility of developers in traditional cloud computing approaches (which this work refers to as ``serverful''), or have to be purchased as separate services.
 
-Another benefit of serverless computing highlighted in the report is its cost model, which follows a pay-as-you-go pricing structure. In this model, end-users are charged only for the resources they actually consume, while the cloud provider covers the costs of any idle resources. This is illustrated in Figure \ref{fig:serverlesscost}.
+Another benefit of serverless computing is its cost model, which follows a pay-as-you-go pricing structure. In this model, end-users are charged only for the resources they actually consume, while the cloud provider covers the costs of any idle resources, as illustrated in Figure \ref{fig:serverlesscost}.
 
 \begin{figure*}
 	\includegraphics[width=\linewidth]{serverlesscost.png}
@@ -128,8 +128,8 @@ Another benefit of serverless computing highlighted in the report is its cost mo
 \end{figure*}
 
 Even with dynamic resource allocation, serverful computing operates on a reservation model, requiring computing resources to be allocated based on the application's peak usage, which leads to a very large underutilization of resources. As Castro et al. point out \cite{schleier-smith_what_2021}, in practice, customer realize saving when moving their applications to serverless, but the price reductions and the increased functionalities offered by the cloud providers could threaten their revenues. 
-
-Due to reduced costs for customers, providers may worry about declining revenues; however, as noted by the Jevons Paradox \cite{alcott_jevons_2005}, lower prices and fewer customer responsibilities can stimulate demand, offsetting the price decrease and potentially boosting providers’ earnings. 
+% Due to reduced costs for customers, providers may worry about declining revenues; 
+However, as noted by the Jevons Paradox \cite{alcott_jevons_2005}, lower prices and fewer customer responsibilities can stimulate demand, offsetting the price decrease and potentially boosting providers’ earnings. 
 
 \section{Security and Privacy}
 Since the services provided are executed on the cloud and serverless computing is inherently event-driven, authentication becomes a critical challenge: only authorized applications should be able to trigger events that start function executions on the cloud, otherwise a freeloader could take advantage of the available resources of the victims \cite{shafiei_serverless_2022}. Specific tokens could be included in requests to address this issue, as Amazon Lambda implements\footnote{\url{https://docs.aws.amazon.com/apigateway/}}, but the token could be extracted and reused if the message is sent through an unsecured network. 
