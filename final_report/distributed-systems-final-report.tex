@@ -27,7 +27,7 @@
 \maketitle
 
 \begin{abstract}
-    This project aims to produce a survey on the topic of serverless computing. The abstract is reported below: 
+    This project aims to produce a survey on the topic of serverless computing titled ``An Overview on Serverless Computing, its Opportunities and its Challenges''. The survey's abstract is reported below: 
     
     Serverless computing has gained importance in both academia and industry due to its cost-efficiency, automated scalability, and virtually unlimited resource availability, offering a novel pay-as-you-go model compared to traditional cloud computing solutions. The serverless paradigm not only eases end-users of the burden of infrastructure management, but its cost model enables users to pay only for resources consumed, while the provider bears the cost of idle resources. However, the stateless nature of the services offered and communication needs of related executions are problems that need to be addressed, as they could pose performance issues and limit the applications of the paradigm. This survey provides an overview of the current advancements in serverless computing, examining its opportunities, challenges, and potential solutions. 
 \end{abstract}
@@ -88,7 +88,7 @@ The project aims to realize a survey to provide an overview on serverless comput
 
 \subsection{Covered topics}
 
-In order to provide a comprehensive study on serverless computing, the relationship between serverless and other topics is analyzed. The survey will cover the following topics:
+In order to provide a comprehensive study on serverless computing, the relationship between serverless and other areas, such as security or caching, is analyzed. The survey will cover the following topics:
 
 \begin{itemize}
   \item The serverless architecture
@@ -102,12 +102,12 @@ In order to provide a comprehensive study on serverless computing, the relations
   \item How to implement caching mechanisms in serverless applications
   \item Performance of the serverless approach, alternative architecture to increase performance of serverless platforms
   \item How scheduling can be used to increase performance, description of the main scheduling approaches
-  \item Statistics about the most known serverless platforms
+  \item Statistics about the usage of serverless platforms
 \end{itemize}
 
 \newpage
 \section{Implementation}
-The survey is divided in the following chapters:
+The survey is divided in the following sections:
 
 \begin{itemize}
   \item Introduction
@@ -116,431 +116,466 @@ The survey is divided in the following chapters:
   \item Data Caching 
   \item Performance 
   \item Scheduling 
-  \item Statistics on serverless usage 
+  \item Statistics on Serverless Usage 
   \item Conclusion
 \end{itemize}
 
+As it is further explained in the introduction, to produce this study various articles and surveys were analyzed to provide general information about the serverless paradigm. The improvements that serverless brings and its critical issues are discussed, and studies that attempt to tackle the paradigm are reviewed in detail.
+
 \subsection{Introduction}
-
-
-
-
-
+The introduction:
 \begin{itemize}
-  \item The type of product developed with that project, for example
-  (non-exhaustive):
-
-  \begin{itemize}
-    \item Application (with GUI, be it mobile, web, or desktop)
-    \item Command-line application (CLI could be used by humans or scripts)
-    \item Library
-    \item Web-service(s)
-  \end{itemize}
-  \item Use case collection
-
-  \begin{itemize}
-    \item \emph{where} are the users?
-    \item \emph{when} and \emph{how frequently} do they interact with the
-    system?
-    \item \emph{how} do they \emph{interact} with the system? which
-    \emph{devices} are they using?
-    \item does the system need to \emph{store} user's \textbf{data}?
-    \emph{which}? \emph{where}?
-    \item most likely, there will be \emph{multiple} \textbf{roles}
-  \end{itemize}
+  \item Explains what Function-as-a-Service and Backend-as-a-Service are
+  \item Explains the functioning of a typical serverless architecture describing the parts involved
+  \item Briefly introduces the differences from Infrastructure-as-a-Service and other traditional cloud computing paradigms
+  \item Explains the methodology used to produce the survey
 \end{itemize}
 
-\section{Requirements}\label{requirements}
+\subsection{Cost-effectiveness}
+This section explains the pay-as-you-go cost model employed by serverless platforms, how it differs from the cost model used by Infrastructure-as-a-Service platforms, and what its advantages are, for both providers and clients.
 
+\subsection{Security and Privacy}
+This section describes how authentication and authorization are implemented in serverless architectures and why they need to be properly implemented even in low-resource devices. It also highlights the need for privacy describing scenarios where a lack of proper security might result in data leakages.
+
+\subsection{Data Caching}
+This section highlights the incompatibilities that the serverless architecture has with typical caching mechanisms and what are the alternative to provide caching. An open source implementation of caching in serverless environments is closely described.
+
+\subsection{Performance}
+This section analyzes the limitation that High-Performance Computing, and, more, in general, latency sensitive applications encounter when using a serverless approach. An alternative serverless architecture is described; in particular, the novel concepts it introduces to limit execution delays are analyzed.
+
+\subsection{Scheduling}
+Scheduling policies for functions executions that allow to avoid resource contention and delays are described, in particular in connection with the following topics:
 \begin{itemize}
-  \item The requirements must explain \textbf{what} (not how) the software
-  being produced should do.
-
-  \begin{itemize}
-    \item you should not focus on the particular problems, but exclusively on
-    what you want the application to do.
-  \end{itemize}
-  \item Requirements must be clearly identified, and possibly numbered
-  \item Requirements are divided into:
-
-  \begin{itemize}
-    \item \textbf{Functional}: some functionality the software should provide
-    to the user
-    \item \textbf{Non-functional}: requirements that do not directly concern
-    behavioural aspects, such as consistency, availability, etc.
-    \item \textbf{Implementation}: constrain the entire phase of system
-    realization, for instance by requiring the use of a specific
-    programming language and/or a specific software tool
-
-    \begin{itemize}
-      \item these constraints should be adequately justified by political /
-      economic / administrative reasons\ldots{}
-      \item \ldots{} otherwise, implementation choices should emerge \emph{as
-      a consequence of} design
-    \end{itemize}
-  \end{itemize}
-  \item If there are domain-specific terms, these should be explained in a
-  glossary
-  \item Each requirement must have its own \textbf{acceptance criteria}
-
-  \begin{itemize}
-    \item these will be important for the validation phase
-  \end{itemize}
+  \item Resource Consumption Patterns
+  \item Reducing Startup Overhead
+  \item Data Locality
 \end{itemize}
 
-\section{Design}\label{design}
-
-This chapter explains the strategies used to meet the requirements
-identified in the analysis. Ideally, the design should be the same,
-regardless of the technological choices made during the implementation
-phase.
-
-\begin{quote}
-You can re-order the sections as you prefer, but all the sections must
-be present in the end
-\end{quote}
-
-\subsection{Architecture}\label{architecture}
-
-\begin{itemize}
-  \item Which architectural style?
-
-  \begin{itemize}
-    \item why?
-  \end{itemize}
-\end{itemize}
-
-\subsection{Infrastructure}\label{infrastructure}
-
-\begin{itemize}
-  \item are there \emph{infrastructural components} that need to be
-  introduced? \emph{how many}?
-
-  \begin{itemize}
-    \item e.g.~\emph{clients}, \emph{servers}, \emph{load balancers},
-    \emph{caches}, \emph{databases}, \emph{message brokers},
-    \emph{queues}, \emph{workers}, \emph{proxies}, \emph{firewalls},
-    \emph{CDNs}, \emph{etc.}
-  \end{itemize}
-  \item how do components \emph{distribute} over the network? \emph{where}?
-
-  \begin{itemize}
-    \item e.g.~do servers / brokers / databases / etc. sit on the same
-    machine? on the same network? on the same datacenter? on the same
-    continent?
-  \end{itemize}
-  \item how do components \emph{find} each other?
-
-  \begin{itemize}
-    \item how to \emph{name} components?
-    \item e.g.~DNS, \emph{service discovery}, \emph{load balancing},
-    \emph{etc.}
-  \end{itemize}
-\end{itemize}
-
-\begin{quote}
-Component diagrams are welcome here
-\end{quote}
-
-\subsection{Modelling}\label{modelling}
-
-\begin{itemize}
-  \item which \textbf{domain entities} are there?
-
-  \begin{itemize}
-    \item e.g.~\emph{users}, \emph{products}, \emph{orders}, \emph{etc.}
-  \end{itemize}
-  \item how do \emph{domain entities} \textbf{map to} \emph{infrastructural
-  components}?
-
-  \begin{itemize}
-    \item e.g.~state of a video game on central server, while
-    inputs/representations on clients
-    \item e.g.~where to store messages in an IM app? for how long?
-  \end{itemize}
-  \item which \textbf{domain events} are there?
-
-  \begin{itemize}
-    \item e.g.~\emph{user registered}, \emph{product added to cart},
-    \emph{order placed}, \emph{etc.}
-  \end{itemize}
-  \item which sorts of \textbf{messages} are exchanged?
-
-  \begin{itemize}
-    \item e.g.~\emph{commands}, \emph{events}, \emph{queries}, \emph{etc.}
-  \end{itemize}
-  \item what information does the \textbf{state} of the system comprehend
-
-  \begin{itemize}
-    \item e.g.~\emph{users' data}, \emph{products' data}, \emph{orders' data},
-    \emph{etc.}
-  \end{itemize}
-\end{itemize}
-
-\begin{quote}
-Class diagram are welcome here
-\end{quote}
-
-\subsection{Interaction}\label{interaction}
-
-\begin{itemize}
-  \item how do components \emph{communicate}? \emph{when}? \emph{what}?
-  \item \emph{which} \textbf{interaction patterns} do they enact?
-\end{itemize}
-
-\begin{quote}
-Sequence diagrams are welcome here
-\end{quote}
-
-\subsection{Behaviour}\label{behaviour}
-
-\begin{itemize}
-  \item how does \emph{each} component \textbf{behave} individually (e.g.~in
-  \emph{response} to \emph{events} or messages)?
-
-  \begin{itemize}
-    \item some components may be \emph{stateful}, others \emph{stateless}
-  \end{itemize}
-  \item which components are in charge of updating the \textbf{state} of the
-  system? \emph{when}? \emph{how}?
-\end{itemize}
-
-\begin{quote}
-State diagrams are welcome here
-\end{quote}
-
-\subsection{Data and Consistency
-Issues}\label{data-and-consistency-issues}
-
-\begin{itemize}
-  \item Is there any data that needs to be stored?
-
-  \begin{itemize}
-    \item \emph{what} data? \emph{where}? \emph{why}?
-  \end{itemize}
-  \item how should \emph{persistent data} be \textbf{stored}?
-
-  \begin{itemize}
-    \item e.g.~relations, documents, key-value, graph, etc.
-    \item why?
-  \end{itemize}
-  \item Which components perform queries on the database?
-
-  \begin{itemize}
-    \item \emph{when}? \emph{which} queries? \emph{why}?
-    \item concurrent read? concurrent write? why?
-  \end{itemize}
-  \item Is there any data that needs to be shared between components?
-
-  \begin{itemize}
-    \item \emph{why}? \emph{what} data?
-  \end{itemize}
-\end{itemize}
-
-\subsection{Fault-Tolerance}\label{fault-tolerance}
-
-\begin{itemize}
-  \item Is there any form of data \textbf{replication} / federation / sharing?
-
-  \begin{itemize}
-    \item \emph{why}? \emph{how} does it work?
-  \end{itemize}
-  \item Is there any \textbf{heart-beating}, \textbf{timeout}, \textbf{retry
-  mechanism}?
-
-  \begin{itemize}
-    \item \emph{why}? \emph{among} which components? \emph{how} does it work?
-  \end{itemize}
-  \item Is there any form of \textbf{error handling}?
-
-  \begin{itemize}
-    \item \emph{what} happens when a component fails? \emph{why}? \emph{how}?
-  \end{itemize}
-\end{itemize}
-
-\subsection{Availability}\label{availability}
-
-\begin{itemize}
-  \item Is there any \textbf{caching} mechanism?
-
-  \begin{itemize}
-    \item \emph{where}? \emph{why}?
-  \end{itemize}
-  \item Is there any form of \textbf{load balancing}?
-
-  \begin{itemize}
-    \item \emph{where}? \emph{why}?
-  \end{itemize}
-  \item In case of \textbf{network partitioning}, how does the system behave?
-
-  \begin{itemize}
-    \item \emph{why}? \emph{how}?
-  \end{itemize}
-\end{itemize}
-
-\subsection{Security}\label{security}
-
-\begin{itemize}
-  \item Is there any form of \textbf{authentication}?
-
-  \begin{itemize}
-    \item \emph{where}? \emph{why}?
-  \end{itemize}
-  \item Is there any form of \textbf{authorization}?
-
-  \begin{itemize}
-    \item which sort of \emph{access control}?
-    \item which sorts of users / \emph{roles}? which \emph{access rights}?
-  \end{itemize}
-  \item Are \textbf{cryptographic schemas} being used?
-
-  \begin{itemize}
-    \item e.g.~token verification,
-    \item e.g.~data encryption, etc.
-  \end{itemize}
-\end{itemize}
-
-\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
-
-\section{Implementation}\label{implementation}
-
-\begin{itemize}
-  \item which \textbf{network protocols} to use?
-
-  \begin{itemize}
-    \item e.g.~UDP, TCP, HTTP, WebSockets, gRPC, XMPP, AMQP, MQTT, etc.
-  \end{itemize}
-  \item how should \emph{in-transit data} be \textbf{represented}?
-
-  \begin{itemize}
-    \item e.g.~JSON, XML, YAML, Protocol Buffers, etc.
-  \end{itemize}
-  \item how should \emph{databases} be \textbf{queried}?
-
-  \begin{itemize}
-    \item e.g.~SQL, NoSQL, etc.
-  \end{itemize}
-  \item how should components be \emph{authenticated}?
-
-  \begin{itemize}
-    \item e.g.~OAuth, JWT, etc.
-  \end{itemize}
-  \item how should components be \emph{authorized}?
-
-  \begin{itemize}
-    \item e.g.~RBAC, ABAC, etc.
-  \end{itemize}
-\end{itemize}
-
-\subsection{Technological details}\label{technological-details}
-
-\begin{itemize}
-  \item any particular \emph{framework} / \emph{technology} being exploited
-  goes here
-\end{itemize}
-
-\section{Validation}\label{validation}
-
-\subsection{Automatic Testing}\label{automatic-testing}
-
-\begin{itemize}
-  \item how were individual components \textbf{\emph{unit}-test}ed?
-  \item how was communication, interaction, and/or integration among
-  components tested?
-  \item how to \textbf{\emph{end-to-end}-test} the system?
-
-  \begin{itemize}
-    \item e.g.~production vs.~test environment
-  \end{itemize}
-  \item for each test specify:
-
-  \begin{itemize}
-    \item rationale of individual tests
-    \item how were the test automated
-    \item how to run them
-    \item which requirement they are testing, if any
-  \end{itemize}
-\end{itemize}
-
-\begin{quote}
-recall that \emph{deployment} \textbf{automation} is commonly used to
-\emph{test} the system in \emph{production-like} environment
-\end{quote}
-
-\begin{quote}
-recall to test corner cases (crashes, errors, etc.)
-\end{quote}
-
-\subsection{Acceptance test}\label{acceptance-test}
-
-\begin{itemize}
-  \item did you perform any \emph{manual} testing?
-
-  \begin{itemize}
-    \item what did you test?
-    \item why wasn't it automatic?
-  \end{itemize}
-\end{itemize}
-
-\section{Release}\label{release}
-
-\begin{itemize}
-  \item how where components organized into \emph{inter-dependant modules} or
-  just a single monolith?
-
-  \begin{itemize}
-    \item provide a \emph{dependency graph} if possible
-  \end{itemize}
-  \item were modules distributed as a \emph{single archive} or \emph{multiple
-  ones}?
-
-  \begin{itemize}
-    \item why?
-  \end{itemize}
-  \item how were archive versioned?
-  \item were archive \emph{released} onto some archive repository (e.g.~Maven,
-  PyPI, npm, etc.)?
-
-  \begin{itemize}
-    \item how to \emph{install} them?
-  \end{itemize}
-\end{itemize}
-
-\section{Deployment}\label{deployment}
-
-\begin{itemize}
-  \item should one install your software from scratch, how to do it?
-
-  \begin{itemize}
-    \item provide instructions
-    \item provide expected outcomes
-  \end{itemize}
-\end{itemize}
-
-\section{User Guide}\label{user-guide}
-
-\begin{itemize}
-  \item how to use your software?
-
-  \begin{itemize}
-    \item provide instructions
-    \item provide expected outcomes
-    \item provide screenshots if possible
-  \end{itemize}
-\end{itemize}
-
-\section{Self-evaluation}\label{self-evaluation}
-
-\begin{itemize}
-  \item An individual section is required for each member of the group
-  \item Each member must self-evaluate their work, listing the strengths and
-  weaknesses of the product
-  \item Each member must describe their role within the group as objectively
-  as possible.
-\end{itemize}
-
-It should be noted that each student is only responsible for their own
-section
+\subsection{Statistics on Serverless Usage}
+General statistics about the usage of serverless are provided. This section analyzes a report from Datadog\footnote{\url{https://www.datadoghq.com/}} and a quantitative study about the AWS Serverless Application Marketplace, a marketplace by Amazon offering functions ready to be deployed.
+
+\subsection{Conclusion}
+The conclusion summarizes the contribution of the survey and suggests potential areas for further research by underlying the importance of solving the issues of the serverless paradigm that were described.
+
+\newpage
+\section{Self-evaluation}
+As explained in the previous sections, this work both provides a general overview on serverless computing and in-depth descriptions of some studies that aim to solve specific issues. I would say that this is the main strength of this survey: it provides both general and detailed information about the discussed topics. On the other hand, I would say that its main weakness lays in the fact that, it does not match the scope of surveys published in research venues in terms of the number of publications reviewed. This work reviews, among others, surveys that provide insights based on multiple publications; however, most published surveys, often the result of collaborative efforts, review hundreds of publications, resulting in a much broader scope.
+
+% \begin{itemize}
+%   \item The type of product developed with that project, for example
+%   (non-exhaustive):
+
+%   \begin{itemize}
+%     \item Application (with GUI, be it mobile, web, or desktop)
+%     \item Command-line application (CLI could be used by humans or scripts)
+%     \item Library
+%     \item Web-service(s)
+%   \end{itemize}
+%   \item Use case collection
+
+%   \begin{itemize}
+%     \item \emph{where} are the users?
+%     \item \emph{when} and \emph{how frequently} do they interact with the
+%     system?
+%     \item \emph{how} do they \emph{interact} with the system? which
+%     \emph{devices} are they using?
+%     \item does the system need to \emph{store} user's \textbf{data}?
+%     \emph{which}? \emph{where}?
+%     \item most likely, there will be \emph{multiple} \textbf{roles}
+%   \end{itemize}
+% \end{itemize}
+
+% \section{Requirements}\label{requirements}
+
+% \begin{itemize}
+%   \item The requirements must explain \textbf{what} (not how) the software
+%   being produced should do.
+
+%   \begin{itemize}
+%     \item you should not focus on the particular problems, but exclusively on
+%     what you want the application to do.
+%   \end{itemize}
+%   \item Requirements must be clearly identified, and possibly numbered
+%   \item Requirements are divided into:
+
+%   \begin{itemize}
+%     \item \textbf{Functional}: some functionality the software should provide
+%     to the user
+%     \item \textbf{Non-functional}: requirements that do not directly concern
+%     behavioural aspects, such as consistency, availability, etc.
+%     \item \textbf{Implementation}: constrain the entire phase of system
+%     realization, for instance by requiring the use of a specific
+%     programming language and/or a specific software tool
+
+%     \begin{itemize}
+%       \item these constraints should be adequately justified by political /
+%       economic / administrative reasons\ldots{}
+%       \item \ldots{} otherwise, implementation choices should emerge \emph{as
+%       a consequence of} design
+%     \end{itemize}
+%   \end{itemize}
+%   \item If there are domain-specific terms, these should be explained in a
+%   glossary
+%   \item Each requirement must have its own \textbf{acceptance criteria}
+
+%   \begin{itemize}
+%     \item these will be important for the validation phase
+%   \end{itemize}
+% \end{itemize}
+
+% \section{Design}\label{design}
+
+% This section explains the strategies used to meet the requirements
+% identified in the analysis. Ideally, the design should be the same,
+% regardless of the technological choices made during the implementation
+% phase.
+
+% \begin{quote}
+% You can re-order the sections as you prefer, but all the sections must
+% be present in the end
+% \end{quote}
+
+% \subsection{Architecture}\label{architecture}
+
+% \begin{itemize}
+%   \item Which architectural style?
+
+%   \begin{itemize}
+%     \item why?
+%   \end{itemize}
+% \end{itemize}
+
+% \subsection{Infrastructure}\label{infrastructure}
+
+% \begin{itemize}
+%   \item are there \emph{infrastructural components} that need to be
+%   introduced? \emph{how many}?
+
+%   \begin{itemize}
+%     \item e.g.~\emph{clients}, \emph{servers}, \emph{load balancers},
+%     \emph{caches}, \emph{databases}, \emph{message brokers},
+%     \emph{queues}, \emph{workers}, \emph{proxies}, \emph{firewalls},
+%     \emph{CDNs}, \emph{etc.}
+%   \end{itemize}
+%   \item how do components \emph{distribute} over the network? \emph{where}?
+
+%   \begin{itemize}
+%     \item e.g.~do servers / brokers / databases / etc. sit on the same
+%     machine? on the same network? on the same datacenter? on the same
+%     continent?
+%   \end{itemize}
+%   \item how do components \emph{find} each other?
+
+%   \begin{itemize}
+%     \item how to \emph{name} components?
+%     \item e.g.~DNS, \emph{service discovery}, \emph{load balancing},
+%     \emph{etc.}
+%   \end{itemize}
+% \end{itemize}
+
+% \begin{quote}
+% Component diagrams are welcome here
+% \end{quote}
+
+% \subsection{Modelling}\label{modelling}
+
+% \begin{itemize}
+%   \item which \textbf{domain entities} are there?
+
+%   \begin{itemize}
+%     \item e.g.~\emph{users}, \emph{products}, \emph{orders}, \emph{etc.}
+%   \end{itemize}
+%   \item how do \emph{domain entities} \textbf{map to} \emph{infrastructural
+%   components}?
+
+%   \begin{itemize}
+%     \item e.g.~state of a video game on central server, while
+%     inputs/representations on clients
+%     \item e.g.~where to store messages in an IM app? for how long?
+%   \end{itemize}
+%   \item which \textbf{domain events} are there?
+
+%   \begin{itemize}
+%     \item e.g.~\emph{user registered}, \emph{product added to cart},
+%     \emph{order placed}, \emph{etc.}
+%   \end{itemize}
+%   \item which sorts of \textbf{messages} are exchanged?
+
+%   \begin{itemize}
+%     \item e.g.~\emph{commands}, \emph{events}, \emph{queries}, \emph{etc.}
+%   \end{itemize}
+%   \item what information does the \textbf{state} of the system comprehend
+
+%   \begin{itemize}
+%     \item e.g.~\emph{users' data}, \emph{products' data}, \emph{orders' data},
+%     \emph{etc.}
+%   \end{itemize}
+% \end{itemize}
+
+% \begin{quote}
+% Class diagram are welcome here
+% \end{quote}
+
+% \subsection{Interaction}\label{interaction}
+
+% \begin{itemize}
+%   \item how do components \emph{communicate}? \emph{when}? \emph{what}?
+%   \item \emph{which} \textbf{interaction patterns} do they enact?
+% \end{itemize}
+
+% \begin{quote}
+% Sequence diagrams are welcome here
+% \end{quote}
+
+% \subsection{Behaviour}\label{behaviour}
+
+% \begin{itemize}
+%   \item how does \emph{each} component \textbf{behave} individually (e.g.~in
+%   \emph{response} to \emph{events} or messages)?
+
+%   \begin{itemize}
+%     \item some components may be \emph{stateful}, others \emph{stateless}
+%   \end{itemize}
+%   \item which components are in charge of updating the \textbf{state} of the
+%   system? \emph{when}? \emph{how}?
+% \end{itemize}
+
+% \begin{quote}
+% State diagrams are welcome here
+% \end{quote}
+
+% \subsection{Data and Consistency
+% Issues}\label{data-and-consistency-issues}
+
+% \begin{itemize}
+%   \item Is there any data that needs to be stored?
+
+%   \begin{itemize}
+%     \item \emph{what} data? \emph{where}? \emph{why}?
+%   \end{itemize}
+%   \item how should \emph{persistent data} be \textbf{stored}?
+
+%   \begin{itemize}
+%     \item e.g.~relations, documents, key-value, graph, etc.
+%     \item why?
+%   \end{itemize}
+%   \item Which components perform queries on the database?
+
+%   \begin{itemize}
+%     \item \emph{when}? \emph{which} queries? \emph{why}?
+%     \item concurrent read? concurrent write? why?
+%   \end{itemize}
+%   \item Is there any data that needs to be shared between components?
+
+%   \begin{itemize}
+%     \item \emph{why}? \emph{what} data?
+%   \end{itemize}
+% \end{itemize}
+
+% \subsection{Fault-Tolerance}\label{fault-tolerance}
+
+% \begin{itemize}
+%   \item Is there any form of data \textbf{replication} / federation / sharing?
+
+%   \begin{itemize}
+%     \item \emph{why}? \emph{how} does it work?
+%   \end{itemize}
+%   \item Is there any \textbf{heart-beating}, \textbf{timeout}, \textbf{retry
+%   mechanism}?
+
+%   \begin{itemize}
+%     \item \emph{why}? \emph{among} which components? \emph{how} does it work?
+%   \end{itemize}
+%   \item Is there any form of \textbf{error handling}?
+
+%   \begin{itemize}
+%     \item \emph{what} happens when a component fails? \emph{why}? \emph{how}?
+%   \end{itemize}
+% \end{itemize}
+
+% \subsection{Availability}\label{availability}
+
+% \begin{itemize}
+%   \item Is there any \textbf{caching} mechanism?
+
+%   \begin{itemize}
+%     \item \emph{where}? \emph{why}?
+%   \end{itemize}
+%   \item Is there any form of \textbf{load balancing}?
+
+%   \begin{itemize}
+%     \item \emph{where}? \emph{why}?
+%   \end{itemize}
+%   \item In case of \textbf{network partitioning}, how does the system behave?
+
+%   \begin{itemize}
+%     \item \emph{why}? \emph{how}?
+%   \end{itemize}
+% \end{itemize}
+
+% \subsection{Security}\label{security}
+
+% \begin{itemize}
+%   \item Is there any form of \textbf{authentication}?
+
+%   \begin{itemize}
+%     \item \emph{where}? \emph{why}?
+%   \end{itemize}
+%   \item Is there any form of \textbf{authorization}?
+
+%   \begin{itemize}
+%     \item which sort of \emph{access control}?
+%     \item which sorts of users / \emph{roles}? which \emph{access rights}?
+%   \end{itemize}
+%   \item Are \textbf{cryptographic schemas} being used?
+
+%   \begin{itemize}
+%     \item e.g.~token verification,
+%     \item e.g.~data encryption, etc.
+%   \end{itemize}
+% \end{itemize}
+
+% \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+% \section{Implementation}\label{implementation}
+
+% \begin{itemize}
+%   \item which \textbf{network protocols} to use?
+
+%   \begin{itemize}
+%     \item e.g.~UDP, TCP, HTTP, WebSockets, gRPC, XMPP, AMQP, MQTT, etc.
+%   \end{itemize}
+%   \item how should \emph{in-transit data} be \textbf{represented}?
+
+%   \begin{itemize}
+%     \item e.g.~JSON, XML, YAML, Protocol Buffers, etc.
+%   \end{itemize}
+%   \item how should \emph{databases} be \textbf{queried}?
+
+%   \begin{itemize}
+%     \item e.g.~SQL, NoSQL, etc.
+%   \end{itemize}
+%   \item how should components be \emph{authenticated}?
+
+%   \begin{itemize}
+%     \item e.g.~OAuth, JWT, etc.
+%   \end{itemize}
+%   \item how should components be \emph{authorized}?
+
+%   \begin{itemize}
+%     \item e.g.~RBAC, ABAC, etc.
+%   \end{itemize}
+% \end{itemize}
+
+% \subsection{Technological details}\label{technological-details}
+
+% \begin{itemize}
+%   \item any particular \emph{framework} / \emph{technology} being exploited
+%   goes here
+% \end{itemize}
+
+% \section{Validation}\label{validation}
+
+% \subsection{Automatic Testing}\label{automatic-testing}
+
+% \begin{itemize}
+%   \item how were individual components \textbf{\emph{unit}-test}ed?
+%   \item how was communication, interaction, and/or integration among
+%   components tested?
+%   \item how to \textbf{\emph{end-to-end}-test} the system?
+
+%   \begin{itemize}
+%     \item e.g.~production vs.~test environment
+%   \end{itemize}
+%   \item for each test specify:
+
+%   \begin{itemize}
+%     \item rationale of individual tests
+%     \item how were the test automated
+%     \item how to run them
+%     \item which requirement they are testing, if any
+%   \end{itemize}
+% \end{itemize}
+
+% \begin{quote}
+% recall that \emph{deployment} \textbf{automation} is commonly used to
+% \emph{test} the system in \emph{production-like} environment
+% \end{quote}
+
+% \begin{quote}
+% recall to test corner cases (crashes, errors, etc.)
+% \end{quote}
+
+% \subsection{Acceptance test}\label{acceptance-test}
+
+% \begin{itemize}
+%   \item did you perform any \emph{manual} testing?
+
+%   \begin{itemize}
+%     \item what did you test?
+%     \item why wasn't it automatic?
+%   \end{itemize}
+% \end{itemize}
+
+% \section{Release}\label{release}
+
+% \begin{itemize}
+%   \item how where components organized into \emph{inter-dependant modules} or
+%   just a single monolith?
+
+%   \begin{itemize}
+%     \item provide a \emph{dependency graph} if possible
+%   \end{itemize}
+%   \item were modules distributed as a \emph{single archive} or \emph{multiple
+%   ones}?
+
+%   \begin{itemize}
+%     \item why?
+%   \end{itemize}
+%   \item how were archive versioned?
+%   \item were archive \emph{released} onto some archive repository (e.g.~Maven,
+%   PyPI, npm, etc.)?
+
+%   \begin{itemize}
+%     \item how to \emph{install} them?
+%   \end{itemize}
+% \end{itemize}
+
+% \section{Deployment}\label{deployment}
+
+% \begin{itemize}
+%   \item should one install your software from scratch, how to do it?
+
+%   \begin{itemize}
+%     \item provide instructions
+%     \item provide expected outcomes
+%   \end{itemize}
+% \end{itemize}
+
+% \section{User Guide}\label{user-guide}
+
+% \begin{itemize}
+%   \item how to use your software?
+
+%   \begin{itemize}
+%     \item provide instructions
+%     \item provide expected outcomes
+%     \item provide screenshots if possible
+%   \end{itemize}
+% \end{itemize}
+
+% \section{Self-evaluation}\label{self-evaluation}
+
+% \begin{itemize}
+%   \item An individual section is required for each member of the group
+%   \item Each member must self-evaluate their work, listing the strengths and
+%   weaknesses of the product
+%   \item Each member must describe their role within the group as objectively
+%   as possible.
+% \end{itemize}
+
+% It should be noted that each student is only responsible for their own
+% section
 
 % \section{Concept}\label{concept}
 
@@ -963,7 +998,7 @@ section
 % section
 
 
-\bibliographystyle{plain}
-\bibliography{references}
+% \bibliographystyle{plain}
+% \bibliography{references}
 
 \end{document}
