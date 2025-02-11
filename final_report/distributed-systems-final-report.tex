@@ -35,11 +35,11 @@
 \newpage
 \section{Concept}\label{concept}
 
-The project aims to realize a survey to provide an overview on serverless computing, specifically about its opportunities and its challenges.
+The project intends to realize a survey to provide an overview on serverless computing, specifically about its opportunities and its challenges.
 
 \subsection{Covered topics}
 
-In order to provide a comprehensive study on serverless computing, the relationship between serverless and other areas, such as security or caching, is analyzed. The survey will cover the following topics:
+In order to provide a comprehensive study on serverless computing, this survey analyzes the relationship between serverless computing and other areas, such as security or caching. It will cover the following topics:
 
 \begin{itemize}
   \item The serverless architecture
@@ -50,9 +50,9 @@ In order to provide a comprehensive study on serverless computing, the relations
     \item Authentication and authorization in serverless applications
     \item Security concerns in the context of serverless
   \end{itemize}
-  \item How to implement caching mechanisms in serverless applications
-  \item Performance of the serverless approach, alternative architecture to increase performance of serverless platforms
-  \item How scheduling can be used to increase performance, description of the main scheduling approaches
+  \item Implementation of caching mechanisms in serverless applications
+  \item Performance insights of serverless applications and architecture modifications aimed to increase performance of serverless platforms
+  \item Main scheduling approaches for serverless functions
   \item Statistics about the usage of serverless platforms
 \end{itemize}
 
@@ -71,14 +71,14 @@ The survey is divided in the following sections:
   \item Conclusion
 \end{itemize}
 
-As it is further explained in the introduction, to produce this study various articles and surveys were analyzed to provide general information about the serverless paradigm. The improvements that serverless brings and its critical issues are discussed, and studies that attempt to tackle the paradigm are reviewed in detail.
+As it is further explained in the introduction, to produce the study various articles and surveys were initially analyzed to provide general information about the serverless paradigm. The improvements that serverless brings and its critical issues are discussed, and then studies that attempt to tackle them are reviewed in detail.
 
 \subsection{Introduction}
 The introduction:
 \begin{itemize}
   \item Explains what Function-as-a-Service and Backend-as-a-Service are
-  \item Explains the functioning of a typical serverless architecture describing the parts involved
-  \item Briefly introduces the differences from Infrastructure-as-a-Service and other traditional cloud computing paradigms
+  \item Explains the functioning of the architecture employed by serverless platforms, describing the parts involved
+  \item Introduces the differences from other traditional cloud computing paradigms
   \item Explains the methodology used to produce the survey
 \end{itemize}
 
@@ -86,13 +86,13 @@ The introduction:
 This section explains the pay-as-you-go cost model employed by serverless platforms, how it differs from the cost model used by Infrastructure-as-a-Service platforms, and what its advantages are, for both providers and clients.
 
 \subsection{Security and Privacy}
-This section describes how authentication and authorization are implemented in serverless architectures and why they need to be properly implemented even in low-resource devices. It also highlights the need for privacy describing scenarios where a lack of proper security might result in data leakages.
+This section describes how authentication and authorization are implemented in serverless architectures. It also highlights the need for privacy describing scenarios where a lack of proper security could result in data leakages.
 
 \subsection{Data Caching}
-This section highlights the incompatibilities that the serverless architecture has with typical caching mechanisms and what are the alternative to provide caching. An open source implementation of caching in serverless environments is closely described.
+This section highlights the incompatibilities that the serverless architecture has with typical caching mechanisms and what the alternatives to provide caching are. An open source implementation of caching in serverless environments is closely described.
 
 \subsection{Performance}
-This section analyzes the limitation that High-Performance Computing, and, more, in general, latency sensitive applications encounter when using a serverless approach. An alternative serverless architecture is described; in particular, the novel concepts it introduces to limit execution delays are analyzed.
+This section analyzes the limitations that High-Performance Computing applications, and, more in general, latency sensitive applications encounter when using a serverless approach. An alternative serverless architecture is described, focusing on the novel concepts it introduces to limit execution delays.
 
 \subsection{Scheduling}
 Scheduling policies for functions executions that allow to avoid resource contention and delays are described, in particular in connection with the following topics:
@@ -103,13 +103,13 @@ Scheduling policies for functions executions that allow to avoid resource conten
 \end{itemize}
 
 \subsection{Statistics on Serverless Usage}
-General statistics about the usage of serverless are provided. This section analyzes a report from Datadog\footnote{\url{https://www.datadoghq.com/}} and a quantitative study about the AWS Serverless Application Marketplace, a marketplace by Amazon offering functions ready to be deployed.
+General statistics about the usage of serverless platforms are provided. This section analyzes a report from Datadog\footnote{\url{https://www.datadoghq.com/}} and a quantitative study about the AWS Serverless Application Marketplace, a marketplace by Amazon offering functions ready to be deployed.
 
 \subsection{Conclusion}
-The conclusion summarizes the contribution of the survey and suggests potential areas for further research by underlying the importance of solving the issues of the serverless paradigm that were described.
+The conclusion summarizes the contribution of the survey. It acknowledges the strengths of the serverless approaches, as well as the challenges posed by the stateless nature and latency issues of serverless computing, which need to be addressed for broader adoption.
 
 \newpage
 \section{Self-evaluation}
-As explained in the previous sections, this work both provides a general overview on serverless computing and in-depth descriptions of some studies that aim to solve specific issues. I would say that this is the main strength of this survey: it provides both general and detailed information about the discussed topics. On the other hand, I would say that its main weakness lays in the fact that, it does not match the scope of surveys published in research venues in terms of the number of publications reviewed. This work reviews, among others, surveys that provide insights based on multiple publications; however, most published surveys, often the result of collaborative efforts, review hundreds of publications, resulting in a much broader scope.
+As explained in the previous sections, the work both provides a general overview on serverless computing and in-depth descriptions of some studies that aim to solve specific issues. I would say that this is the main strength of the survey: it provides both general and detailed information about the discussed topics. On the other hand, I would say that its main weakness lays in the fact that it does not match the scope of surveys published in research venues in terms of number of publications reviewed. This work reviews, among others, surveys that provide insights based on multiple publications; however, most published surveys, often the result of collaborative efforts, review hundreds of publications, resulting in a much broader scope.
 
 \end{document}
