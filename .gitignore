@@ -6,8 +6,6 @@
 *.fls
 *.log
 *.out
-main.pdf
-distributed-systems-final-report.pdf
 *.xml
 *.gz
 .vscode
